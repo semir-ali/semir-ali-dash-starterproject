@@ -14,6 +14,5 @@ export class NodeCollectionStore extends NodeStore {
     @action
     public addNodes(stores: NodeStore[]): void {
         this.nodes.push(...stores); // This is equivalent to: stores.forEach(store => this.nodes.push(store));
-
     }
 }

@@ -40,6 +40,6 @@ export class TopBar extends React.Component<TopBarProps> {
     }
 
     render() {
-        return <div className="topbar" onPointerDown={this.onPointerDown} />
+        return <div className="topbar" onPointerDown={this.onPointerDown}/>
     }
 }

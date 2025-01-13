@@ -19,10 +19,19 @@ export class NodeStore {
     public y: number = 0;
 
     @observable
-    public width: number = 0;
+    public width: number = 300;
 
     @observable
-    public height: number = 0;
+    public height: number = 300;
+
+    @observable
+    public border: string = "4px";
+
+    @observable
+    public outline: string = "transparent";
+
+    @observable 
+    public selected: boolean = false;
 
     @computed
     public get transform(): string {

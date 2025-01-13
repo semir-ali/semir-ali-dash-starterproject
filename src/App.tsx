@@ -2,14 +2,15 @@ import React from 'react';
 import './App.scss';
 import { NodeCollectionStore, NodeStore, StaticTextNodeStore, StoreType, VideoNodeStore } from './stores';
 import { FreeFormCanvas } from './views/freeformcanvas/FreeFormCanvas';
+import { ImageNodeStore } from './stores/ImageNodeStore';
 
 
 const mainNodeCollection = new NodeCollectionStore();
 
 // create a bunch of text and video nodes (you probably want to delete this at some point)
-let numNodes: number = 300;
-let maxX: number = 10000;
-let maxY: number = 10000;
+let numNodes: number = 2;
+let maxX: number = 300;
+let maxY: number = 300;
 let nodes: NodeStore[] = [];
 
 // add 150 static text nodes to random locations
@@ -19,9 +20,9 @@ for (let i = 0; i < numNodes / 2; i++) {
 
 // add 150 video nodes to random locations
 for (let i = 0; i < numNodes / 2; i++) {
-    nodes.push(new VideoNodeStore({ type: StoreType.Video, x: Math.random() * maxX, y: Math.random() * maxY, title: "Video Node Title", url: "http://cs.brown.edu/people/peichman/downloads/cted.mp4" }));
+    nodes.push(new VideoNodeStore({ type: StoreType.Video, x: Math.random() * maxX, y: Math.random() * maxY, title: "Video Node Title", url: "https://picsum.photos/200" }));
 }
-
+nodes.push(new ImageNodeStore({x: Math.random() * maxX, y: Math.random() * maxY, url: "http://cs.brown.edu/people/peichman/downloads/cted.mp4"}))
 // add set of 300 nodes to node collection
 mainNodeCollection.addNodes(nodes);
 
