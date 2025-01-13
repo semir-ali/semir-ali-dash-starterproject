@@ -20,9 +20,11 @@ for (let i = 0; i < numNodes / 2; i++) {
 
 // add 150 video nodes to random locations
 for (let i = 0; i < numNodes / 2; i++) {
-    nodes.push(new VideoNodeStore({ type: StoreType.Video, x: Math.random() * maxX, y: Math.random() * maxY, title: "Video Node Title", url: "https://picsum.photos/200" }));
+    nodes.push(new VideoNodeStore({ type: StoreType.Video, x: Math.random() * maxX, y: Math.random() * maxY, title: "Video Node Title", url: "http://cs.brown.edu/people/peichman/downloads/cted.mp4" }));
 }
-nodes.push(new ImageNodeStore({x: Math.random() * maxX, y: Math.random() * maxY, url: "http://cs.brown.edu/people/peichman/downloads/cted.mp4"}))
+nodes.push(new ImageNodeStore({type: StoreType.Image, x: Math.random() * maxX, y: Math.random() * maxY, url: "https://img.pokemondb.net/artwork/large/muk.jpg"}))
+console.log("Slay!");
+console.log(nodes);
 // add set of 300 nodes to node collection
 mainNodeCollection.addNodes(nodes);
 
