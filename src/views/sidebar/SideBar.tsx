@@ -10,15 +10,17 @@ interface SideBarProps {
 export class SideBar extends React.Component<SideBarProps> {
     render() {
         return (
-            <div>
-                <nav>
-                    <ul className="sidebar">
-                        <li><button>Test Button</button></li>
-                        <li><button>Test Button #2</button></li>
-                        <li><button>Test Button #3</button></li>
-                    </ul>
-                </nav>
-            </div>
+            <nav className="nav">
+                <a href='/'>Brown Dash
+                <ul>
+                    <li><button>Add Text Node</button></li>
+                    <li><button>Add Website Node</button></li>
+                    <li><button>Add Video Node</button></li>
+                    <li><button>Add Image Node</button></li>
+                    <li><button>Remove Node</button></li>
+                </ul>
+                </a>
+            </nav>
         )
     }
 }
