@@ -6,6 +6,7 @@ import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { TextNodeView, VideoNodeView } from "../nodes";
 import { WebsiteNodeView } from "../nodes/WebsiteNodeView";
 import { WebsiteNodeStore } from "../../stores/WebsiteNodeStore";
+import { SideBar } from "../sidebar/SideBar";
 import "./FreeFormCanvas.scss";
 
 interface FreeFormProps {
@@ -48,8 +49,9 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         let store = this.props.store;
         return (
             <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
+                <SideBar></SideBar>
                 <div className="freeformcanvas" style={{ transform: store.transform }}>
-                    {   
+                    {
                         // maps each item in the store to be rendered in the canvas based on the node type
                         store.nodes.map(nodeStore => {
                             switch (nodeStore.type) {
