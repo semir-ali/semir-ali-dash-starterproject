@@ -4,6 +4,8 @@ import { NodeCollectionStore, StaticTextNodeStore, StoreType, VideoNodeStore } f
 import { ImageNodeView } from "../nodes/ImageNodeView";
 import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { TextNodeView, VideoNodeView } from "../nodes";
+import { WebsiteNodeView } from "../nodes/WebsiteNodeView";
+import { WebsiteNodeStore } from "../../stores/WebsiteNodeStore";
 import "./FreeFormCanvas.scss";
 
 interface FreeFormProps {
@@ -53,11 +55,12 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
                             switch (nodeStore.type) {
                                 case StoreType.Text:
                                     return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore}/>)
-
                                 case StoreType.Video:
                                     return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore}/>)
                                 case StoreType.Image:
                                     return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore}/>)
+                                case StoreType.Website:
+                                    return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore}/>)
                                 default:
                                     return (null);
                             }

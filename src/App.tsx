@@ -3,6 +3,7 @@ import './App.scss';
 import { NodeCollectionStore, NodeStore, StaticTextNodeStore, StoreType, VideoNodeStore } from './stores';
 import { FreeFormCanvas } from './views/freeformcanvas/FreeFormCanvas';
 import { ImageNodeStore } from './stores/ImageNodeStore';
+import { WebsiteNodeStore } from './stores/WebsiteNodeStore';
 
 
 const mainNodeCollection = new NodeCollectionStore();
@@ -23,6 +24,7 @@ for (let i = 0; i < numNodes / 2; i++) {
     nodes.push(new VideoNodeStore({ type: StoreType.Video, x: Math.random() * maxX, y: Math.random() * maxY, title: "Video Node Title", url: "http://cs.brown.edu/people/peichman/downloads/cted.mp4" }));
 }
 nodes.push(new ImageNodeStore({type: StoreType.Image, x: Math.random() * maxX, y: Math.random() * maxY, url: "https://img.pokemondb.net/artwork/large/muk.jpg"}))
+nodes.push(new WebsiteNodeStore({type: StoreType.Website, x: Math.random() *maxX, y: Math.random() * maxY, url: "https://youtube.com"}))
 console.log("Slay!");
 console.log(nodes);
 // add set of 300 nodes to node collection
