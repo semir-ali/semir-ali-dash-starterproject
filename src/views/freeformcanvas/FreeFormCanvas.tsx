@@ -50,24 +50,7 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         return (
             <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
                 <SideBar store={this.props.store}></SideBar>
-                <div className="freeformcanvas" style={{ transform: store.transform }}>
-                    {
-                        // maps each item in the store to be rendered in the canvas based on the node type
-                        store.nodes.map(nodeStore => {
-                            switch (nodeStore.type) {
-                                case StoreType.Text:
-                                    return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={store}/>)
-                                case StoreType.Video:
-                                    return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={store}/>)
-                                case StoreType.Image:
-                                    return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>)
-                                case StoreType.Website:
-                                    return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>)
-                                default:
-                                    return (null);
-                            }
-                        })
-                    }             
+                <div className="freeformcanvas" style={{ transform: store.transform }}>             
                 </div>
             </div>
         );

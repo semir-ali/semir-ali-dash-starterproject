@@ -17,7 +17,7 @@ export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
         let store = this.props.store;
         let collection = this.props.collection;
         return (
-            <div className="node websiteNode" style={{ transform: store.transform, width: store.width}} onWheel={(e: React.WheelEvent) => {
+            <div className="node websiteNode" style={{ transform: store.transform, width: store.width, height: store.height, outline:store.outline}} onWheel={(e: React.WheelEvent) => {
                             e.stopPropagation();
                             e.preventDefault();
                         }}
