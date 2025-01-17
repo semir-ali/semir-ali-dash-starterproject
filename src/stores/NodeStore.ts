@@ -21,10 +21,10 @@ export class NodeStore {
     public y: number = 0;
 
     @observable
-    public width: number = 300;
+    public width: number = 600;
 
     @observable
-    public height: number = 300;
+    public height: number = 500;
 
     @observable
     public border: string = "4px";

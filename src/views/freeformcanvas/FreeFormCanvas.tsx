@@ -5,7 +5,6 @@ import { ImageNodeView } from "../nodes/ImageNodeView";
 import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { TextNodeView, VideoNodeView } from "../nodes";
 import { WebsiteNodeView } from "../nodes/WebsiteNodeView";
-import { WebsiteNodeStore } from "../../stores/WebsiteNodeStore";
 import { SideBar } from "../sidebar/SideBar";
 import "./FreeFormCanvas.scss";
 
@@ -40,23 +39,24 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         e.stopPropagation();
         e.preventDefault();
         if (!this.isPointerDown) return;
-
-        this.props.store.x += e.movementX;
-        this.props.store.y += e.movementY;
+        if (!this.props.store.hasSelectedNodes) {
+            this.props.store.x += e.movementX;
+            this.props.store.y += e.movementY;
+        }
     }
-
+    xLocation = (): number => this.props.store.x;
     render() {
         let store = this.props.store;
         return (
             <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
-                <SideBar></SideBar>
+                <SideBar store={this.props.store}></SideBar>
                 <div className="freeformcanvas" style={{ transform: store.transform }}>
                     {
                         // maps each item in the store to be rendered in the canvas based on the node type
                         store.nodes.map(nodeStore => {
                             switch (nodeStore.type) {
                                 case StoreType.Text:
-                                    return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore}/>)
+                                    return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={store}/>)
                                 case StoreType.Video:
                                     return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore}/>)
                                 case StoreType.Image:
@@ -67,7 +67,7 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
                                     return (null);
                             }
                         })
-                    }
+                    }             
                 </div>
             </div>
         );

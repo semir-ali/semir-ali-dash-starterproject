@@ -34,9 +34,10 @@ export class TopBar extends React.Component<TopBarProps> {
         e.stopPropagation();
         e.preventDefault();
         if (!this.isPointerDown) return;
-
-        this.props.store.x += e.movementX;
-        this.props.store.y += e.movementY;
+        if (!this.props.store.selected){
+            this.props.store.x += e.movementX;
+            this.props.store.y += e.movementY;
+        }
     }
 
     render() {

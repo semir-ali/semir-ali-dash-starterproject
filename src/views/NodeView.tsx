@@ -1,25 +1,25 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
-import { NodeCollectionStore, StaticTextNodeStore } from "../../../stores";
-import { TopBar } from "../TopBar";
+import { NodeCollectionStore } from "../stores";
+import { NodeStore } from "../stores";
+import { TopBar } from "./nodes";
 import "./../NodeView.scss";
 import "./TextNodeView.scss";
 
-interface TextNodeProps {
-    store: StaticTextNodeStore;
+interface NodeProps {
+    store: NodeStore;
     collection: NodeCollectionStore;
 }
 
 @observer
-export class TextNodeView extends React.Component<TextNodeProps> {
+export class NodeView extends React.Component<NodeProps> {
 
     render() {
         const store = this.props.store;
         const collection = this.props.collection;
-
         return (
             <div
-                className="node textNode"
+                className="node"
                 style={{
                     transform: store.transform,
                     width: store.width,
@@ -36,8 +36,6 @@ export class TextNodeView extends React.Component<TextNodeProps> {
                 <TopBar store={store} />
                 <div className="scroll-box">
                     <div className="content">
-                        <h3 className="title">{store.title}</h3>
-                        <p className="paragraph">{store.text}</p>
                     </div>
                 </div>
             </div>
@@ -49,14 +47,17 @@ export class TextNodeView extends React.Component<TextNodeProps> {
             this.props.store.outline = "10px blue solid";
             collection.addSelectedNodes(this.props.store);
 
+            // Add event listeners for arrow keys when the node is selected
             document.addEventListener("keydown", this.onKeyDown);
         } else {
             this.props.store.outline = "transparent";
             collection.removeSelectedNode(this.props.store);
 
+            // Remove event listeners for arrow keys when the node is deselected
             document.removeEventListener("keydown", this.onKeyDown);
         }
 
+        // Toggle selection state
         this.props.store.selected = !this.props.store.selected;
     };
 
