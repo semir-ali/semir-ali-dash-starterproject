@@ -26,6 +26,7 @@ export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
                 <div className="scroll-box">
                     <div className="content">
                         <iframe src={store.url} />
+                        <p>Not loading? Find your website at <a href={store.url}>{store.url}</a></p>
                     </div>
                 </div>
             </div>

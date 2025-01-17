@@ -17,16 +17,16 @@ interface SideBarProps {
 export class SideBar extends React.Component<SideBarProps> {
     render() {
         let store = this.props.store;
-        // Makes a navigation bar which individually adds nodes to the scene
+        // Makes a navigation bar which individually adds nodes to the scene based on individual types, also prompts user for relevant information (i.e. the title, url, text)
         return (
             <nav className="nav">
                 <ul>
-                    <li><button onClick={() => this.addNode(store, new StaticTextNodeStore({type: StoreType.Text, x: Math.random() * 300, y: Math.random() * 300}))}>Add Text Node</button></li>
-                    <li><button onClick={() => this.addNode(store, new WebsiteNodeStore({type: StoreType.Website, x: Math.random() * 300, y: Math.random() * 300, url: "https://www.wikipedia.com"}))}>Add Website Node</button></li>
-                    <li><button onClick={() => this.addNode(store, new VideoNodeStore({type: StoreType.Video, x: Math.random() * 300, y: Math.random() * 300, url: "https://img.pokemondb.net/artwork/large/muk.jpg"}))}>
+                    <li><button onClick={() => this.addNode(store, new StaticTextNodeStore({type: StoreType.Text, title: prompt('Title? ', "untitled") as string, text: prompt('Text? ', "untitled") as string, y: Math.random() * 300}))}>Add Text Node</button></li>
+                    <li><button onClick={() => this.addNode(store, new WebsiteNodeStore({type: StoreType.Website, url: prompt('Which website do you want displayed? ', 'https://www.google.com') as string, x: Math.random() * 300, y: Math.random() * 300}))}>Add Website Node</button></li>
+                    <li><button onClick={() => this.addNode(store, new VideoNodeStore({type: StoreType.Video, url: prompt('What is the url of your video? ', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4') as string, x: Math.random() * 300, y: Math.random() * 300}))}>
                         Add Video Node</button></li>
                     <li><button onClick={() => this.addNode(store, 
-                        new ImageNodeStore({type: StoreType.Image, x: Math.random() * 300, y: Math.random() * 300, url: "https://img.pokemondb.net/artwork/large/muk.jpg"}))}>Add Image Node</button></li>
+                        new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', "https://img.pokemondb.net/artwork/large/muk.jpg") as string, x: Math.random() * 300, y: Math.random() * 300}))}>Add Image Node</button></li>
                     <li><button onClick={() => this.removeNode(store)}>Remove Node</button></li>
                 </ul>
             </nav>

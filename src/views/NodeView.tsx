@@ -1,13 +1,12 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
-import { NodeCollectionStore } from "../stores";
+import { NodeCollectionStore, StaticTextNodeStore } from "../stores";
 import { NodeStore } from "../stores";
 import { TopBar } from "./nodes";
-import "./../NodeView.scss";
-import "./TextNodeView.scss";
+import "./NodeView.scss";
 
 interface NodeProps {
-    store: NodeStore;
+    store: StaticTextNodeStore;
     collection: NodeCollectionStore;
 }
 
@@ -15,17 +14,21 @@ interface NodeProps {
 export abstract class NodeView<NodeStore> extends React.Component<NodeProps> {
 
     render() {
-        const store = this.props.store;
         const collection = this.props.collection;
+        const store = this.props.store;
+        if (!store.placed) {
+            document.addEventListener("pointermove", this.onPointerMove)
+        }
         return (
             <div
-                className="node"
+                className="node textNode"
                 style={{
                     transform: store.transform,
                     width: store.width,
                     border: store.border,
                     outline: store.outline,
-                    height: store.height
+                    height: store.height,
+                    opacity: store.opacity
                 }}
                 onWheel={(e: React.WheelEvent) => {
                     e.stopPropagation();
@@ -36,13 +39,20 @@ export abstract class NodeView<NodeStore> extends React.Component<NodeProps> {
                 <TopBar store={store} />
                 <div className="scroll-box">
                     <div className="content">
+                        <h3 className="title">{store.title}</h3>
+                        <p className="paragraph">{store.text}</p>
                     </div>
                 </div>
             </div>
         );
     }
 
-    public onClickEvent = (collection: NodeCollectionStore) => {
+    protected onClickEvent = (collection: NodeCollectionStore) => {
+        if (!this.props.store.placed) {
+            this.props.store.placed = true;
+            this.props.store.opacity = 1;
+            document.removeEventListener("pointermove", this.onPointerMove);
+        }
         if (!this.props.store.selected) {
             this.props.store.outline = "10px blue solid";
             collection.addSelectedNodes(this.props.store);
@@ -57,8 +67,16 @@ export abstract class NodeView<NodeStore> extends React.Component<NodeProps> {
 
         this.props.store.selected = !this.props.store.selected;
     };
+    protected onPointerMove = (e: PointerEvent) => {
+        this.props.store.x = e.x - this.props.store.width / 2;
+        this.props.store.y = e.y - this.props.store.width / 2;
+    }
+    protected onPointerDown = (e: PointerEvent) => {
+        this.props.store.placed = true;
+        document.removeEventListener("pointermove", this.onPointerMove);
+    }
 
-    onKeyDown = (e: KeyboardEvent): void => {
+    protected onKeyDown = (e: KeyboardEvent): void => {
         e.stopPropagation();
         e.preventDefault();
 

@@ -35,6 +35,12 @@ export class NodeStore {
     @observable 
     public selected: boolean = false;
 
+    @observable 
+    public placed: boolean = false;
+
+    @observable
+    public opacity: number = .5;
+
     @computed
     public get transform(): string {
         return "translate(" + this.x + "px, " + this.y + "px)";
