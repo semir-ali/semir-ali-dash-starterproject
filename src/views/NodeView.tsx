@@ -12,7 +12,7 @@ interface NodeProps {
 }
 
 @observer
-export class NodeView extends React.Component<NodeProps> {
+export abstract class NodeView<NodeStore> extends React.Component<NodeProps> {
 
     render() {
         const store = this.props.store;
@@ -42,22 +42,19 @@ export class NodeView extends React.Component<NodeProps> {
         );
     }
 
-    onClickEvent = (collection: NodeCollectionStore) => {
+    public onClickEvent = (collection: NodeCollectionStore) => {
         if (!this.props.store.selected) {
             this.props.store.outline = "10px blue solid";
             collection.addSelectedNodes(this.props.store);
 
-            // Add event listeners for arrow keys when the node is selected
             document.addEventListener("keydown", this.onKeyDown);
         } else {
             this.props.store.outline = "transparent";
             collection.removeSelectedNode(this.props.store);
 
-            // Remove event listeners for arrow keys when the node is deselected
             document.removeEventListener("keydown", this.onKeyDown);
         }
 
-        // Toggle selection state
         this.props.store.selected = !this.props.store.selected;
     };
 

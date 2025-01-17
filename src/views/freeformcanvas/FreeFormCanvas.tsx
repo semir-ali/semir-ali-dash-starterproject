@@ -58,11 +58,11 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
                                 case StoreType.Text:
                                     return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={store}/>)
                                 case StoreType.Video:
-                                    return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore}/>)
+                                    return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={store}/>)
                                 case StoreType.Image:
-                                    return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore}/>)
+                                    return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>)
                                 case StoreType.Website:
-                                    return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore}/>)
+                                    return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>)
                                 default:
                                     return (null);
                             }
