@@ -1,9 +1,9 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
 import { NodeCollectionStore, VideoNodeStore } from "../../../stores";
-import "./../NodeView.scss";
 import { TopBar } from "./../TopBar";
 import "./VideoNodeView.scss";
+import { NodeView } from "../../NodeView";
 
 interface VideoNodeProps {
     store: VideoNodeStore;
@@ -11,7 +11,11 @@ interface VideoNodeProps {
 }
 
 @observer
-export class VideoNodeView extends React.Component<VideoNodeProps> {
+export class VideoNodeView extends NodeView<VideoNodeStore> {
+
+    constructor(props: VideoNodeProps) {
+        super(props);
+    }
 
     render() {
         let store = this.props.store;

@@ -2,8 +2,8 @@ import { observer } from "mobx-react";
 import * as React from 'react';
 import { ImageNodeStore } from "../../../stores/ImageNodeStore";
 import { NodeCollectionStore } from "../../../stores";
-import "./../NodeView.scss";
 import { TopBar } from "./../TopBar";
+import { NodeView } from "../../NodeView";
 import "./ImageNodeView.scss";
 
 interface ImageNodeProps {
@@ -12,7 +12,7 @@ interface ImageNodeProps {
 }
 
 @observer
-export class ImageNodeView extends React.Component<ImageNodeProps> {
+export class ImageNodeView extends NodeView<ImageNodeStore> {
 
     render() {
         let store = this.props.store;

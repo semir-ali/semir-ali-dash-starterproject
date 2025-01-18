@@ -1,17 +1,18 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
+import { VideoNodeStore } from "../stores";
 import { NodeCollectionStore, StaticTextNodeStore } from "../stores";
 import { NodeStore } from "../stores";
 import { TopBar } from "./nodes";
 import "./NodeView.scss";
 
-interface NodeProps {
-    store: StaticTextNodeStore;
+interface NodeProps<Type> {
+    store: Type;
     collection: NodeCollectionStore;
 }
 
 @observer
-export abstract class NodeView<NodeStore> extends React.Component<NodeProps> {
+export abstract class NodeView<Type extends NodeStore> extends React.Component<NodeProps<Type>> {
 
     render() {
         const collection = this.props.collection;
@@ -39,8 +40,6 @@ export abstract class NodeView<NodeStore> extends React.Component<NodeProps> {
                 <TopBar store={store} />
                 <div className="scroll-box">
                     <div className="content">
-                        <h3 className="title">{store.title}</h3>
-                        <p className="paragraph">{store.text}</p>
                     </div>
                 </div>
             </div>

@@ -44,8 +44,9 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
             this.props.store.y += e.movementY;
         }
     }
-    xLocation = (): number => this.props.store.x;
+
     render() {
+        console.log('Hi!')
         let store = this.props.store;
         return (
             <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>

@@ -1,17 +1,18 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
 import { WebsiteNodeStore } from "../../../stores/WebsiteNodeStore";
-import "./../NodeView.scss";
 import { TopBar } from "./../TopBar";
 import { NodeCollectionStore } from "../../../stores";
+import { NodeView } from "../../NodeView";
 
 interface WebsiteNodeProps {
     store: WebsiteNodeStore;
     collection: NodeCollectionStore;
 }
 
+
 @observer
-export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
+export class WebsiteNodeView extends NodeView<WebsiteNodeStore> {
 
     render() {
         let store = this.props.store;

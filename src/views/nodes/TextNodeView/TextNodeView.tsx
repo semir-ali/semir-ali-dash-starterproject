@@ -1,23 +1,12 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
-import { NodeCollectionStore, StaticTextNodeStore } from "../../../stores";
 import { NodeView } from "../../NodeView";
+import { NodeCollectionStore, StaticTextNodeStore } from "../../../stores";
 import { TopBar } from "../TopBar";
 import "./TextNodeView.scss";
 
-interface TextNodeProps {
-    store: StaticTextNodeStore;
-    collection: NodeCollectionStore;
-}
-
-
 @observer
 export class TextNodeView extends NodeView<StaticTextNodeStore> {
-
-    constructor(props: TextNodeProps) {
-        super(props);
-    }
-
 
     render() {
         const collection = this.props.collection;
