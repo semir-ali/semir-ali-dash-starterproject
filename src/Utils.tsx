@@ -108,7 +108,7 @@ export class Utils {
     public static onPointerMove = (e: PointerEvent, store: NodeStore) => {
         if (store.position == NodePosition.Unplaced) {
             store.x = e.x - store.width / 2;
-            store.y = e.y - (7 * store.height/8);
+            store.y = e.y - (store.height);
         }
     }
 }
