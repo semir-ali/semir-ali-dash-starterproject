@@ -1,19 +1,24 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
-import { NodeView } from "../../NodeView";
 import { NodeCollectionStore, StaticTextNodeStore } from "../../../stores";
 import { TopBar } from "../TopBar";
+import { Utils } from "../../../Utils";
 import "./TextNodeView.scss";
 
+interface TextNodeProps {
+    store: StaticTextNodeStore;
+    collection: NodeCollectionStore;
+}
+
+
 @observer
-export class TextNodeView extends NodeView<StaticTextNodeStore> {
+export class TextNodeView extends React.Component<TextNodeProps> {
+
 
     render() {
-        const collection = this.props.collection;
         const store = this.props.store;
-        if (!store.placed) {
-            document.addEventListener("pointermove", this.onPointerMove)
-        }
+        const collection = this.props.collection;
+        document.addEventListener("pointermove", (e) => Utils.onPointerMove(e, store))
         return (
             <div
                 className="node textNode"
@@ -29,7 +34,7 @@ export class TextNodeView extends NodeView<StaticTextNodeStore> {
                     e.stopPropagation();
                     e.preventDefault();
                 }}
-                onClick={() => this.onClickEvent(collection)}
+                onClick={() => Utils.onClickEvent(collection, store)}
             >
                 <TopBar store={store} />
                 <div className="scroll-box">
