@@ -19,17 +19,11 @@ export class ImageNodeView extends React.Component<ImageNodeProps> {
         let collection = this.props.collection;
         document.addEventListener("pointermove", (e) => Utils.onPointerMove(e, store))
         return (
-            <div className="node imageNode" style={{ transform: store.transform, width: store.width, height: store.height, outline: store.outline, opacity: store.opacity}} onWheel={(e: React.WheelEvent) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                        }}
-                        onClick={() => Utils.onClickEvent(collection, store)}>
-                <TopBar store={store}/>
-                <div className="scroll-box">
-                    <div className="content">
-                        <img src={store.url} />
-                    </div>
-                </div>
+            <div>
+                {Utils.renderNode("node imageNode", store, collection,
+                                <div>
+                                    <img src={store.url} />
+                                </div>)}
             </div>
         );
     }

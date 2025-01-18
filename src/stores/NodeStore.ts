@@ -8,11 +8,25 @@ export enum StoreType {
     Website
 }
 
+// Let's say there's three ways a node could be
+// It could be unplaced (just selected)
+// Could be unselected (placed but not chosen, able to be moved around)
+// Could be selected (placed, chosen, not able to be moved around, able to be resized and removed)
+
+export enum NodePosition {
+    Unplaced,
+    Unselected,
+    Selected
+}
+
 export class NodeStore {
 
     public Id: string = Utils.GenerateGuid();
 
     public type: StoreType | null = null;
+
+    @observable
+    public position: NodePosition | NodePosition = NodePosition.Unplaced;
 
     @observable
     public x: number = 0;

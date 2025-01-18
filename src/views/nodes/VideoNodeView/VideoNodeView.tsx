@@ -18,18 +18,12 @@ export class VideoNodeView extends React.Component<VideoNodeProps> {
         let collection = this.props.collection;
         document.addEventListener("pointermove", (e) => Utils.onPointerMove(e, store))
         return (
-            <div className="node videoNode" style={{ transform: store.transform, width: store.width, height: store.height, outline: store.outline, opacity: store.opacity}} onWheel={(e: React.WheelEvent) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                        }}
-                        onClick={() => Utils.onClickEvent(collection, store)}>
-                <TopBar store={store}/>
-                <div className="scroll-box">
-                    <div className="content">
-                        <h3 className="title">{store.title}</h3>
-                        <video src={store.url} controls />
-                    </div>
-                </div>
+            <div>
+                {Utils.renderNode("node videoNode", store, collection,
+                <div>
+                    <h3 className="title">{store.title}</h3>
+                    <video src={store.url} controls />
+                </div>)}
             </div>
         );
     }
