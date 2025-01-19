@@ -1,6 +1,7 @@
 import { NodeCollectionStore, NodePosition } from "./stores";
 import { NodeStore } from "./stores";
 import { TopBar } from "./views/nodes";
+import { Constants } from "./Constants";
 import { observer } from "mobx-react";
 import * as React from 'react';
 
@@ -107,8 +108,8 @@ export class Utils {
     // When the node is first created, allows the user to move it around the canvas
     public static onPointerMove = (e: PointerEvent, store: NodeStore) => {
         if (store.position == NodePosition.Unplaced) {
-            store.x = e.x - store.width / 2;
-            store.y = e.y - (store.height);
+            store.x = e.x - store.width * Constants.UNPLACED_NODE_X_OFFSET;
+            store.y = e.y - (store.height * Constants.UNPLACED_NODE_Y_OFFSET);
         }
     }
 }

@@ -10,6 +10,7 @@ interface SideBarProps {
     store: NodeCollectionStore;
 }
 
+// A wrapper class for a top hotbar which allows for user interaction with the nodes on the canvas
 @observer
 export class SideBar extends React.Component<SideBarProps> {
     render() {
@@ -34,6 +35,7 @@ export class SideBar extends React.Component<SideBarProps> {
         store.addNode(node);
     }
 
+    // Removes all selected nodes from the screen
     removeNode = (store: NodeCollectionStore): void => {
         store.removeSelectedNodes();
     }

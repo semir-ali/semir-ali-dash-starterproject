@@ -7,11 +7,13 @@ interface TopBarProps {
     store: NodeStore;
 }
 
+// A class that is a wrapper component for the top bar of the node (allowing for it to move)
 @observer
 export class TopBar extends React.Component<TopBarProps> {
 
     private isPointerDown = false;
 
+    // When the mouse is pressed down, allows for the individual node to move
     onPointerDown = (e: React.PointerEvent): void => {
         e.stopPropagation();
         e.preventDefault();
@@ -22,6 +24,7 @@ export class TopBar extends React.Component<TopBarProps> {
         document.addEventListener("pointerup", this.onPointerUp);
     }
 
+    // When the mouse is released, stops the movement of the nodes
     onPointerUp = (e: PointerEvent): void => {
         e.stopPropagation();
         e.preventDefault();
@@ -30,6 +33,7 @@ export class TopBar extends React.Component<TopBarProps> {
         document.removeEventListener("pointerup", this.onPointerUp);
     }
 
+    // Allows the node (and top bar) to move around
     onPointerMove = (e: PointerEvent): void => {
         e.stopPropagation();
         e.preventDefault();

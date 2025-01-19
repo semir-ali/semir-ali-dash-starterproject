@@ -10,6 +10,7 @@ interface VideoNodeProps {
     collection: NodeCollectionStore
 }
 
+// Visually represents the video node
 @observer
 export class VideoNodeView extends React.Component<VideoNodeProps> {
 

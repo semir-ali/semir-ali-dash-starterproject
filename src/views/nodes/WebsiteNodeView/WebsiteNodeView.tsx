@@ -10,6 +10,7 @@ interface WebsiteNodeProps {
     collection: NodeCollectionStore;
 }
 
+// Visually shows the website node
 @observer
 export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
 

@@ -1,6 +1,9 @@
 import { observable } from "mobx";
 import { NodeStore } from "./NodeStore";
 
+/**
+ * This component essentially stores all relevant information to model an image node
+ */
 export class ImageNodeStore extends NodeStore {
 
     constructor(initializer: Partial<ImageNodeStore>) {
@@ -21,6 +24,7 @@ export class ImageNodeStore extends NodeStore {
         */
     }
 
+    // Unique url for the image
     @observable
     public url: string = "";
 }

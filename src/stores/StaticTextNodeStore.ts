@@ -21,6 +21,7 @@ export class StaticTextNodeStore extends NodeStore {
         */
     }
 
+    // Represents the unique part of the text node
     @observable
     public title: string = "";
 

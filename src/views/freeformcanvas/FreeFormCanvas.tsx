@@ -12,11 +12,13 @@ interface FreeFormProps {
     store: NodeCollectionStore
 }
 
+// Acts as the overall backdrop of the scene, being able to control the movement of the nodes
 @observer
 export class FreeFormCanvas extends React.Component<FreeFormProps> {
 
     private isPointerDown: boolean | undefined;
 
+    // When the mouse is pressed down, allows for the movement of the nodes
     onPointerDown = (e: React.PointerEvent): void => {
         e.stopPropagation();
         e.preventDefault();
@@ -27,6 +29,7 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         document.addEventListener("pointerup", this.onPointerUp);
     }
 
+    // When the mouse is released, stops this movement
     onPointerUp = (e: PointerEvent): void => {
         e.stopPropagation();
         e.preventDefault();
@@ -35,6 +38,7 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         document.removeEventListener("pointerup", this.onPointerUp);
     }
 
+    // If there are no selected nodes on screen, moves all the nodes
     onPointerMove = (e: PointerEvent): void => {
         e.stopPropagation();
         e.preventDefault();
@@ -44,9 +48,8 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
             this.props.store.y += e.movementY;
         }
     }
-
+    
     render() {
-        console.log('Hi!')
         let store = this.props.store;
         return (
             <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
@@ -54,10 +57,10 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
                 <div className="freeformcanvas" style={{ transform: store.transform }}>
                     {
                         // maps each item in the store to be rendered in the canvas based on the node type
-                        store.nodes.map(nodeStore => {
+                        store.unselectedNodes.map(nodeStore => {
                             switch (nodeStore.type) {
                                 case StoreType.Text:
-                                    return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={store}/>)
+                                    return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={store}/>) 
                                 case StoreType.Video:
                                     return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={store}/>)
                                 case StoreType.Image:

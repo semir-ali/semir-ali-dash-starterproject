@@ -9,7 +9,7 @@ interface TextNodeProps {
     collection: NodeCollectionStore;
 }
 
-
+// Essentially acts as the visual display for the text node
 @observer
 export class TextNodeView extends React.Component<TextNodeProps> {
     render() {

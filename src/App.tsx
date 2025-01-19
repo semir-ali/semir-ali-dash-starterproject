@@ -11,7 +11,6 @@ const mainNodeCollection = new NodeCollectionStore();
 
 export class App extends React.Component {
     render() {
-        console.log('Hi!')
         return (
             <div className="App">
               <FreeFormCanvas store={mainNodeCollection} /> 

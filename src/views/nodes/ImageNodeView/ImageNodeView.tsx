@@ -11,6 +11,7 @@ interface ImageNodeProps {
     collection: NodeCollectionStore;
 }
 
+// Essentially represents the visual display of the image node
 @observer
 export class ImageNodeView extends React.Component<ImageNodeProps> {
 
