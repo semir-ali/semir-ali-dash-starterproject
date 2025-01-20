@@ -3,6 +3,7 @@ import * as React from 'react';
 import { NodeCollectionStore, VideoNodeStore } from "../../../stores";
 import { TopBar } from "./../TopBar";
 import "./VideoNodeView.scss";
+import "../NodeView.scss";
 import { Utils } from "../../../Utils";
 
 interface VideoNodeProps {

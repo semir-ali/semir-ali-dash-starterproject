@@ -31,6 +31,7 @@
         cursor: se-resize;
     }
     .resize-square-right {
+        visibility: hidden;
         position: absolute;
         background: lightseagreen;
         width: 10px;

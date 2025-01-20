@@ -63,6 +63,9 @@ export class NodeStore {
     public opacity: number = .5;
 
     @observable
+    public connectedNodeId: string = this.Id;
+
+    @observable
     public resizableNodeVisibility: ResizableNodesVisibility | ResizableNodesVisibility = ResizableNodesVisibility.Hidden;
 
     @computed

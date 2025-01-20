@@ -1,7 +1,8 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
 import { WebsiteNodeStore } from "../../../stores/WebsiteNodeStore";
-import "./WebsiteNode.scss"
+import "./WebsiteNode.scss";
+import "../NodeView.scss";
 import { NodeCollectionStore } from "../../../stores";
 import { Utils } from "../../../Utils";
 

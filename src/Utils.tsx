@@ -41,15 +41,15 @@ export class Utils {
                         {specificNodeContent}
                     </div>
                 </div>
-                <div className="resize-square-bottom-right" 
+                <div className="resize-square-bottom-right" style={{visibility: store.resizableNodeVisibility}}
                 onPointerDown={(e) => this.alterNode(e, store, "Resize Right")}></div>
-                <div className="resize-square-right" 
+                <div className="resize-square-right" style={{visibility: store.resizableNodeVisibility}}
                 onPointerDown={(e) => this.alterNode(e, store, "Resize Right")}></div>
-                <div className="resize-square-bottom" 
+                <div className="resize-square-bottom" style={{visibility: store.resizableNodeVisibility}}
                 onPointerDown={(e) => this.alterNode(e, store, "Resize")}></div>
-                <div className="resize-square-bottom-left"
+                <div className="resize-square-bottom-left" style={{visibility: store.resizableNodeVisibility}}
                 onPointerDown={(e) => this.alterNode(e, store, "Resize Left")}></div>
-                <div className="resize-square-left"
+                <div className="resize-square-left" style={{visibility: store.resizableNodeVisibility}}
                 onPointerDown={(e) => this.alterNode(e, store, "Resize Left")}></div>
             </div>
         )

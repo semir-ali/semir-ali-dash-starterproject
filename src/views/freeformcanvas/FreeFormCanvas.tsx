@@ -7,6 +7,7 @@ import { TextNodeView, VideoNodeView } from "../nodes";
 import { WebsiteNodeView } from "../nodes/WebsiteNodeView";
 import { SideBar } from "../sidebar/SideBar";
 import "./FreeFormCanvas.scss";
+import { Editor } from 'primereact/editor';
 
 interface FreeFormProps {
     store: NodeCollectionStore
@@ -43,7 +44,7 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         e.stopPropagation();
         e.preventDefault();
         if (!this.isPointerDown) return;
-        if (!this.props.store.hasSelectedNodes) {
+        if (this.props.store.numOfSelectedNodes != 0) {
             this.props.store.x += e.movementX;
             this.props.store.y += e.movementY;
         }
@@ -53,7 +54,7 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         let store = this.props.store;
         return (
             <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
-                <SideBar store={this.props.store}></SideBar>
+                <SideBar collection={this.props.store}></SideBar>
                 <div className="freeformcanvas" style={{ transform: store.transform }}>
                     {
                         // maps each item in the store to be rendered in the canvas based on the node type
