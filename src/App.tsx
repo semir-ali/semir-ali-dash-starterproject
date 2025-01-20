@@ -4,7 +4,6 @@ import { NodeCollectionStore, NodeStore, StaticTextNodeStore, StoreType, VideoNo
 import { FreeFormCanvas } from './views/freeformcanvas/FreeFormCanvas';
 import { ImageNodeStore } from './stores/ImageNodeStore';
 import { WebsiteNodeStore } from './stores/WebsiteNodeStore';
-import { SideBar } from './views/sidebar/SideBar';
 
 
 const mainNodeCollection = new NodeCollectionStore();

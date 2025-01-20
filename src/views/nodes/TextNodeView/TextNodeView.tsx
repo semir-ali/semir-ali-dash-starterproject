@@ -15,7 +15,7 @@ export class TextNodeView extends React.Component<TextNodeProps> {
     render() {
         const store = this.props.store;
         const collection = this.props.collection;
-        document.addEventListener("pointermove", (e) => Utils.onPointerMove(e, store))
+        document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store))
         return (
             <div>
                 {Utils.renderNode("node textNode", store, collection,

@@ -17,7 +17,7 @@ export class VideoNodeView extends React.Component<VideoNodeProps> {
     render() {
         let store = this.props.store;
         let collection = this.props.collection;
-        document.addEventListener("pointermove", (e) => Utils.onPointerMove(e, store))
+        document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store))
         return (
             <div>
                 {Utils.renderNode("node videoNode", store, collection,
