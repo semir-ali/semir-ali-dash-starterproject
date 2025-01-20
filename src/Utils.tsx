@@ -1,3 +1,4 @@
+import { Constants } from "./Constants";
 import { NodeStore, ResizableNodesVisibility } from "./stores";
 import { NodeCollectionStore, NodePosition } from "./stores";
 import { TopBar } from "./views/nodes";
@@ -118,10 +119,10 @@ export class Utils {
     };
 
     // When the node is first created, allows the user to move it around the canvas
-    public static onPointerMove = (e: PointerEvent, store: NodeStore) => {
+    public static moveNewNode = (e: PointerEvent, store: NodeStore) => {
         if (store.position == NodePosition.Unplaced) {
-            store.x = e.x - store.width / 2;
-            store.y = e.y - (store.height);
+            store.x = e.x - store.width * Constants.UNPLACED_NODE_X_OFFSET;
+            store.y = e.y - store.height * Constants.UNPLACED_NODE_Y_OFFSET;
         }
     }
 }
