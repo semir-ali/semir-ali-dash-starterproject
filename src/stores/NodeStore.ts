@@ -8,10 +8,12 @@ export enum StoreType {
     Website
 }
 
-// Let's say there's three ways a node could be
-// It could be unplaced (just selected)
-// Could be unselected (placed but not chosen, able to be moved around)
-// Could be selected (placed, chosen, not able to be moved around, able to be resized and removed)
+/**
+ * This enum represents the three position states that the node could be
+ * It could be unplaced, meaning that it was just generated 
+ * It could be unselected, meaning it has been placed and movable (but not selected)
+ * Or it could be selected, meaning it is removable and resizable
+ */
 
 export enum NodePosition {
     Unplaced,
@@ -19,6 +21,12 @@ export enum NodePosition {
     Selected
 }
 
+export enum ResizableNodesVisibility {
+    Hidden = "hidden",
+    Visible = "visible"
+}
+
+// Contains all the information for all nodes
 export class NodeStore {
 
     public Id: string = Utils.GenerateGuid();
@@ -46,14 +54,11 @@ export class NodeStore {
     @observable
     public outline: string = "transparent";
 
-    @observable 
-    public selected: boolean = false;
-
-    @observable 
-    public placed: boolean = false;
-
     @observable
     public opacity: number = .5;
+
+    @observable
+    public resizableNodeVisibility: ResizableNodesVisibility | ResizableNodesVisibility = ResizableNodesVisibility.Hidden;
 
     @computed
     public get transform(): string {
