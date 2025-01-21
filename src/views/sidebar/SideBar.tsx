@@ -4,6 +4,7 @@ import { NodeCollectionStore, StaticTextNodeStore, StoreType, VideoNodeStore } f
 import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { WebsiteNodeStore } from "../../stores/WebsiteNodeStore";
 import { NodeStore } from "../../stores";
+import { NodeLink } from "../NodeLink/NodeLink";
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import "./SideBar.scss";
 
@@ -44,23 +45,9 @@ export class SideBar extends React.Component<SideBarProps> {
 
     linkNodes = (collection: NodeCollectionStore): void => {
         if (collection.numOfSelectedNodes === 2) {
-            <div>
-                <ArcherElement
-                id={collection.linkedNodesIds[0]}
-                relations={[
-                    {
-                    targetId: collection.linkedNodesIds[1],
-                    targetAnchor: 'top',
-                    sourceAnchor: 'bottom',
-                    style: { strokeDasharray: '5,5' },
-                    },
-                ]}
-                >
-                <div>Root</div>
-          </ArcherElement>
-        </div>
-        console.log("rep!")
+            collection.addLinkedNodes()
+            new NodeLink({node1: collection.selectedNodes[0], node2: collection.selectedNodes[1], collection: collection})
+            console.log(collection.linkedNodes)
         }
-        console.log("unrep!")
     }
 }

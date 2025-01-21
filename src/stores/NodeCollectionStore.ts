@@ -16,7 +16,7 @@ export class NodeCollectionStore extends NodeStore {
     public selectedNodes: NodeStore[] = new Array<NodeStore>();
 
     @observable
-    public linkedNodes: NodeStore[][] = [][2];
+    public linkedNodes: NodeStore[][] = [];
 
     @computed
     public get transform(): string {
@@ -39,6 +39,10 @@ export class NodeCollectionStore extends NodeStore {
         this.unselectedNodes.push(store);
     }
 
+    @action
+    public addLinkedNodes() {
+        this.linkedNodes.push([this.selectedNodes[0], this.selectedNodes[1]]);
+    }
     // Adds a node to the selected nodes array
     @action
     public addSelectedNodes(store: NodeStore): void {

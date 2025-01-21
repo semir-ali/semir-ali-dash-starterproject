@@ -6,6 +6,7 @@ import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { TextNodeView, VideoNodeView } from "../nodes";
 import { WebsiteNodeView } from "../nodes/WebsiteNodeView";
 import { SideBar } from "../sidebar/SideBar";
+import { NodeLink } from "../NodeLink/NodeLink";
 import "./FreeFormCanvas.scss";
 import { Editor } from 'primereact/editor';
 
@@ -50,31 +51,41 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         }
     }
     
-    render() {
-        let store = this.props.store;
-        return (
-            <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
-                <SideBar collection={this.props.store}></SideBar>
-                <div className="freeformcanvas" style={{ transform: store.transform }}>
-                    {
-                        // maps each item in the store to be rendered in the canvas based on the node type
-                        store.unselectedNodes.map(nodeStore => {
-                            switch (nodeStore.type) {
-                                case StoreType.Text:
-                                    return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={store}/>) 
-                                case StoreType.Video:
-                                    return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={store}/>)
-                                case StoreType.Image:
-                                    return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>)
-                                case StoreType.Website:
-                                    return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>)
-                                default:
-                                    return (null);
-                            }
-                        })
-                    }             
+render() {
+    let store = this.props.store;
+    return (
+        <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
+            <SideBar collection={this.props.store}></SideBar>
+            <div className="freeformcanvas" style={{ transform: store.transform }}>
+                <div>
+                    {store.unselectedNodes.map(nodeStore => {
+                        switch (nodeStore.type) {
+                            case StoreType.Text:
+                                return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={store}/>);
+                            case StoreType.Video:
+                                return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={store}/>);
+                            case StoreType.Image:
+                                return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>);
+                            case StoreType.Website:
+                                return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={store}/>);
+                            default:
+                                return null;
+                        }
+                    })}
+                    {store.linkedNodes !== null ? 
+                        store.linkedNodes.map(linkedNodes => (
+                            <NodeLink 
+                                key={`${linkedNodes[0].Id}-${linkedNodes[1].Id}`} 
+                                node1={linkedNodes[0]}
+                                node2={linkedNodes[1]} 
+                                collection={store}
+                            />
+                        )) 
+                        : null
+                    }
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
+}
 }
