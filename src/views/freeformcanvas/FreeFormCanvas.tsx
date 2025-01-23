@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
 import { NodeCollectionStore, StaticTextNodeStore, StoreType, VideoNodeStore } from "../../stores";
+import { CanvasNodeStore } from "../../stores/CanvasNodeStore";
 import { ImageNodeView } from "../nodes/ImageNodeView";
 import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { TextNodeView, VideoNodeView } from "../nodes";
