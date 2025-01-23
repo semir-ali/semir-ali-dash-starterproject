@@ -8,7 +8,6 @@ import { WebsiteNodeView } from "../nodes/WebsiteNodeView";
 import { SideBar } from "../sidebar/SideBar";
 import { NodeLink } from "../NodeLink/NodeLink";
 import "./FreeFormCanvas.scss";
-import { Editor } from 'primereact/editor';
 
 interface FreeFormProps {
     store: NodeCollectionStore
@@ -45,7 +44,7 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
         e.stopPropagation();
         e.preventDefault();
         if (!this.isPointerDown) return;
-        if (this.props.store.numOfSelectedNodes != 0) {
+        if (this.props.store.numOfSelectedNodes == 0) {
             this.props.store.x += e.movementX;
             this.props.store.y += e.movementY;
         }
@@ -55,9 +54,19 @@ render() {
     let store = this.props.store;
     return (
         <div className="freeformcanvas-container" onPointerDown={this.onPointerDown}>
-            <SideBar collection={this.props.store}></SideBar>
+            <SideBar collection={this.props.store}/>
             <div className="freeformcanvas" style={{ transform: store.transform }}>
                 <div>
+                    {store.linkedNodes !== null ? 
+                        store.linkedNodes.map(linkedNodes => (
+                            <NodeLink 
+                                key={`${linkedNodes[0].Id}-${linkedNodes[1].Id}`} 
+                                node1={linkedNodes[0]}
+                                node2={linkedNodes[1]} 
+                                collection={store}
+                            />
+                        )) : null
+                    }
                     {store.unselectedNodes.map(nodeStore => {
                         switch (nodeStore.type) {
                             case StoreType.Text:
@@ -72,17 +81,6 @@ render() {
                                 return null;
                         }
                     })}
-                    {store.linkedNodes !== null ? 
-                        store.linkedNodes.map(linkedNodes => (
-                            <NodeLink 
-                                key={`${linkedNodes[0].Id}-${linkedNodes[1].Id}`} 
-                                node1={linkedNodes[0]}
-                                node2={linkedNodes[1]} 
-                                collection={store}
-                            />
-                        )) 
-                        : null
-                    }
                 </div>
             </div>
         </div>

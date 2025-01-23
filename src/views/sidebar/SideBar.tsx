@@ -36,6 +36,7 @@ export class SideBar extends React.Component<SideBarProps> {
     // Takes a node and adds it to the node collection (so it can be removed)
     addNode = (collection: NodeCollectionStore, store: NodeStore): void => {
         collection.addNode(store);
+        console.log(store.x)
     }
 
     // Removes all selected nodes from the screen

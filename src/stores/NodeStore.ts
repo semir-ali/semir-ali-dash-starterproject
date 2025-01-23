@@ -40,18 +40,25 @@ export class NodeStore {
 
     @observable
     public position: NodePosition | NodePosition = NodePosition.Unplaced;
-
-    @observable
-    public x: number = 0;
-
-    @observable
-    public y: number = 0;
-
+    
     @observable
     public width: number = 600;
 
     @observable
     public height: number = 500;
+
+
+    @observable
+    public x: number = 0;
+
+    @observable 
+    public centerX: number = this.x + (this.width / 2);
+
+    @observable
+    public y: number = 0;
+
+    @observable
+    public centerY: number = this.y + (this.height/2);
 
     @observable
     public border: string = "4px";

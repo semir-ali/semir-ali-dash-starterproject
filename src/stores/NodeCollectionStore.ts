@@ -62,4 +62,28 @@ export class NodeCollectionStore extends NodeStore {
             this.unselectedNodes.splice(index, 1)})
         this.selectedNodes = new Array<NodeStore>();
     }
+    @action
+    public unselectAllNodes(): void {
+        this.selectedNodes = new Array<NodeStore>();
+    }
+    @action
+    public moveAllNodes(xDistance: number, yDistance: number): void {
+        this.selectedNodes.forEach(node => {
+            node.centerX -= xDistance
+            node.centerY -= yDistance
+        })
+        this.unselectedNodes.forEach(node => {
+            node.x -= xDistance
+            node.y += yDistance
+        })
+    }
+
+    @action
+    public unlinkNodes(removedNode: NodeStore) {
+        this.linkedNodes.forEach(nodeArray => (node: number) => 
+                {if (nodeArray[node] === removedNode) {
+                this.linkedNodes.splice(this.linkedNodes.indexOf(nodeArray), 1)
+            }}
+        )
+    }
 }
