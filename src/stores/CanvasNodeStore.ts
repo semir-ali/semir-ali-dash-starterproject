@@ -3,7 +3,12 @@ import { NodeStore } from "./NodeStore";
 import { observer } from "mobx-react";
 import * as React from 'react';
 import { ArcherContainer, ArcherElement } from 'react-archer';
+import { NodeCollectionStore } from "./NodeCollectionStore";
+import { CanvasCollectionStore } from "./CanvasCollectionStore";
 
+export enum CanvasType {
+    FreeformCanvas
+}
 /**
  * This acts as a wrapper component for two arrays, one for unselected nodes and one for selected nodes
  */
@@ -25,4 +30,15 @@ export class CanvasNodeStore extends NodeStore {
         this.text = initializer.text;
         */
     }
+    @observable
+    public prevNode: CanvasNodeStore | undefined;
+
+    @observable 
+    public childrenNodes: NodeCollectionStore = new NodeCollectionStore();
+
+    @observable
+    public isRenderedNode: boolean = false;
+
+    @observable
+    public canvasType: CanvasType | undefined;
 }

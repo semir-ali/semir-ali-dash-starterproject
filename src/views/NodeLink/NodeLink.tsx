@@ -24,7 +24,8 @@ render() {
     const finalY = node2.y + (node2.height/2);
     const distance = this.findProperty(initialX, initialY, finalX, finalY, "Distance");
     const angle = this.findProperty(initialX, initialY, finalX, finalY, "Angle of rotation");
-    return (
+    if (node1 != null && node2 != null) {
+        return (
         <div
             className="nodelink"
             style={{
@@ -37,10 +38,10 @@ render() {
                 transform: `rotate(${angle}rad)`, // Allows the link to rotate
                 transformOrigin: "0 50%", // Rotate around the starting point
                 }}
-                // onClick={e => this.centerLinkedNode(e, collection, node1, node2)}
-                onPointerDown={e => this.onPointerDown(e, collection, node1, node2)}
+                onClick={e => this.centerLinkedNode(e, collection, node1, node2)}
         ></div>
     );
+    }
     }
 
     findProperty = (initialX: number, initialY: number, finalX: number, finalY: number, formula: string) => {
@@ -71,30 +72,5 @@ render() {
         }
         collection.moveAllNodes(xDistanceFromMouse, yDistanceFromMouse)
         collection.unselectAllNodes();
-    }
-    onPointerDown = (e: React.PointerEvent, collection: NodeCollectionStore, node1: NodeStore, node2: NodeStore) => {
-        e.stopPropagation();
-        e.preventDefault();
-        document.addEventListener("pointerup", (e) => this.onPointerUp(e, collection, node1, node2))
-    }
-    onPointerUp = (e: PointerEvent, collection: NodeCollectionStore, node1: NodeStore, node2: NodeStore) => {
-        const node1DistanceFromCenter = this.findProperty(e.x, e.y, node1.centerX, node1.centerX + node1.centerY, "Distance") as number;
-        const node2DistanceFromCenter = this.findProperty(e.x, e.y, node2.centerX, node2.centerY, "Distance") as number;
-        var xDistanceFromMouse = 0;
-        var yDistanceFromMouse = 0;
-        console.log(node1.x)
-        console.log(node2.x)
-        console.log(e.x)
-        if (node1DistanceFromCenter > node2DistanceFromCenter) {
-            xDistanceFromMouse = node1.centerX - e.x;
-            yDistanceFromMouse = node1.centerY - e.y;
-        }
-        else {
-            xDistanceFromMouse = node2.centerX - e.x;
-            yDistanceFromMouse = node2.centerY - e.y;
-        }
-        collection.moveAllNodes(xDistanceFromMouse, yDistanceFromMouse)
-        collection.unselectAllNodes();
-        document.removeEventListener("pointerup", (e) => this.onPointerUp(e, collection, node1, node2))
     }
 }
