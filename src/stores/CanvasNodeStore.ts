@@ -7,7 +7,8 @@ import { NodeCollectionStore } from "./NodeCollectionStore";
 import { CanvasCollectionStore } from "./CanvasCollectionStore";
 
 export enum CanvasType {
-    FreeformCanvas
+    FreeformCanvas,
+    Rep
 }
 /**
  * This acts as a wrapper component for two arrays, one for unselected nodes and one for selected nodes
@@ -40,5 +41,5 @@ export class CanvasNodeStore extends NodeStore {
     public isRenderedNode: boolean = false;
 
     @observable
-    public canvasType: CanvasType | undefined;
+    public canvasType: CanvasType | null = null;
 }
