@@ -76,17 +76,14 @@ export class SideBar extends React.Component<SideBarProps> {
 
     if (!selectedCanvas) return;
 
-    // Deactivate the currently rendered canvas
+    // Deactivate the currently rendered canvas (avoid all nodes being linked to it)
     for (let i = 0; i < canvas.canvasCollection.length; i++) {
-        if (canvas.canvasCollection[i].isRenderedNode) {
-            canvas.canvasCollection[i].isRenderedNode = false;
-            break; // Stop after deactivating the rendered canvas
-        }
+        canvas.canvasCollection[i].isRenderedNode = false;
     }
 
     // Activate the selected canvas
     selectedCanvas.isRenderedNode = true;
-    };
+};
 
     exitCanvas = (currentCanvas: CanvasNodeStore) => {
         var newRenderedCanvas = currentCanvas.prevNode;

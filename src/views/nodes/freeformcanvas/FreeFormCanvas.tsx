@@ -20,12 +20,12 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
     
 render() {
     let store = this.props.store;
-    let collection = this.props.collection;
+    let collection = this.props.store.childrenNodes;
     if (store.isRenderedNode === false) {
         document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store));
         return (
             <div>
-                {Utils.renderNode("node freeformcanvasNode", store, collection,
+                {Utils.renderNode("node freeformcanvasNode", store, this.props.collection,
                                 <div>
                                     <div className="freeformcanvas" style={{ transform: collection.transform }}>
                                         {collection.linkedNodes !== null ? 

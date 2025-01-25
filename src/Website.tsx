@@ -11,6 +11,7 @@ const mainCanvasCollection = new CanvasCollectionStore();
 @observer
 export class Website extends React.Component {
     render() {
+        console.log("Tick tock!");
         // Determines first canvas
         if (mainCanvasCollection.canvasCollection.length === 0) {
             const promptedCanvas = prompt("What canvas do you want displayed? \n A: FreeformCanvas", "A");
@@ -18,11 +19,12 @@ export class Website extends React.Component {
                 mainCanvasCollection.addCanvas(new CanvasNodeStore({isRenderedNode: true, canvasType: CanvasType.FreeformCanvas}));
             }
         }
+        // Renders the type of canvas
         if (mainCanvasCollection.renderedNode.canvasType === CanvasType.FreeformCanvas) {
             return (
             <div>
-                <FreeFormCanvas store={mainCanvasCollection.renderedNode} collection={mainCanvasCollection.renderedNode.childrenNodes} />;
                 <SideBar currentCanvas={mainCanvasCollection.renderedNode} canvasCollection={mainCanvasCollection}/>;
+                <FreeFormCanvas store={mainCanvasCollection.renderedNode} collection={mainCanvasCollection.renderedNode.childrenNodes} />;
             </div>
             )
         }
