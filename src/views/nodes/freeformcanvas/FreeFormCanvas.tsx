@@ -10,8 +10,8 @@ import { Utils } from "../../../Utils";
 import "./FreeFormCanvas.scss";
 
 interface FreeFormProps {
-    store: CanvasNodeStore
-    collection: NodeCollectionStore
+    store: CanvasNodeStore // Treats the canvas as an individual node
+    collection: NodeCollectionStore // Treats the canvas as a backdrop with multiple nodes
 }
 
 // Acts as the overall backdrop of the scene, being able to control the movement of the nodes
@@ -22,7 +22,7 @@ render() {
     let store = this.props.store;
     let collection = this.props.collection;
     if (store.isRenderedNode === false) {
-        document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store))
+        document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store));
         return (
             <div>
                 {Utils.renderNode("node freeformcanvasNode", store, collection,
@@ -34,7 +34,7 @@ render() {
                                 key={Utils.GenerateGuid()} 
                                 node1={linkedNodes[0]}
                                 node2={linkedNodes[1]} 
-                                collection={collection}
+                                nodeCollection={collection}
                             />
                         )) : null
                     }
@@ -49,8 +49,7 @@ render() {
                             case StoreType.Website:
                                 return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection}/>);
                             case StoreType.FreeformCanvas:
-                                const canvasNodeStore = nodeStore as CanvasNodeStore;
-                                return (<FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNodeStore.childrenNodes}/>);
+                                return (<FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={collection}/>);
                             default:
                                 return null;
                         }
@@ -70,7 +69,7 @@ render() {
                                 key={Utils.GenerateGuid()} 
                                 node1={linkedNodes[0]}
                                 node2={linkedNodes[1]} 
-                                collection={collection}
+                                nodeCollection={collection}
                             />
                         )) : null
                         

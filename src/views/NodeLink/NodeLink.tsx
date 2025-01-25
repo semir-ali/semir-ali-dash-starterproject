@@ -6,7 +6,7 @@ import { NodeCollectionStore } from "../../stores";
 interface NodeLinkProps {
     node1: NodeStore;
     node2: NodeStore;
-    collection: NodeCollectionStore;
+    nodeCollection: NodeCollectionStore;
 }
 
 
@@ -15,7 +15,7 @@ interface NodeLinkProps {
 export class NodeLink extends React.Component<NodeLinkProps> {
 
 render() {
-    const collection = this.props.collection;
+    const nodeCollection = this.props.nodeCollection;
     const node1 = this.props.node1;
     const node2 = this.props.node2;
     const initialX = node1.x + (node1.width/2);
@@ -37,7 +37,7 @@ render() {
                 transform: `rotate(${angle}rad)`, // Allows the link to rotate
                 transformOrigin: "0 50%", // Rotate around the starting point
                 }}
-                onClick={e => this.centerLinkedNode(e, collection, node1, node2)}
+                onClick={e => this.centerLinkedNode(e, nodeCollection, node1, node2)}
         ></div>
     );
     }
@@ -53,7 +53,7 @@ render() {
         }
     }
 
-    centerLinkedNode = (e: React.MouseEvent, collection: NodeCollectionStore, node1: NodeStore, node2: NodeStore) => {
+    centerLinkedNode = (e: React.MouseEvent, nodeCollection: NodeCollectionStore, node1: NodeStore, node2: NodeStore) => {
         const node1DistanceFromCenter = this.findProperty(e.pageX, e.pageY, node1.centerX, node1.centerY, "Distance") as number;
         const node2DistanceFromCenter = this.findProperty(e.pageX, e.pageY, node2.centerX, node2.centerY, "Distance") as number;
         var xDistanceFromMouse = 0;
@@ -66,7 +66,7 @@ render() {
             xDistanceFromMouse = node2.centerX - e.pageX;
             yDistanceFromMouse = node2.centerY - e.pageY;
         }
-        collection.moveAllNodes(xDistanceFromMouse, yDistanceFromMouse)
-        collection.unselectAllNodes();
+        nodeCollection.moveAllNodes(xDistanceFromMouse, yDistanceFromMouse)
+        nodeCollection.unselectAllNodes();
     }
 }
