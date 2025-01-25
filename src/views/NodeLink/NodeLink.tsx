@@ -24,8 +24,7 @@ render() {
     const finalY = node2.y + (node2.height/2);
     const distance = this.findProperty(initialX, initialY, finalX, finalY, "Distance");
     const angle = this.findProperty(initialX, initialY, finalX, finalY, "Angle of rotation");
-    if (node1 != null && node2 != null) {
-        return (
+    return (
         <div
             className="nodelink"
             style={{
@@ -42,7 +41,6 @@ render() {
         ></div>
     );
     }
-    }
 
     findProperty = (initialX: number, initialY: number, finalX: number, finalY: number, formula: string) => {
         const dx = finalX - initialX; // Change in x
@@ -56,12 +54,10 @@ render() {
     }
 
     centerLinkedNode = (e: React.MouseEvent, collection: NodeCollectionStore, node1: NodeStore, node2: NodeStore) => {
-        const node1DistanceFromCenter = this.findProperty(e.pageX, e.pageY, node1.centerX, node1.centerX + node1.centerY, "Distance") as number;
+        const node1DistanceFromCenter = this.findProperty(e.pageX, e.pageY, node1.centerX, node1.centerY, "Distance") as number;
         const node2DistanceFromCenter = this.findProperty(e.pageX, e.pageY, node2.centerX, node2.centerY, "Distance") as number;
         var xDistanceFromMouse = 0;
         var yDistanceFromMouse = 0;
-        console.log(node1.x)
-        console.log(node2.x)
         if (node1DistanceFromCenter > node2DistanceFromCenter) {
             xDistanceFromMouse = node1.centerX - e.pageX;
             yDistanceFromMouse = node1.centerY - e.pageY;

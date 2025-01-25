@@ -1,22 +1,26 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
-import { NodeCollectionStore, StaticTextNodeStore, StoreType, VideoNodeStore } from "../../stores";
+import { CanvasCollectionStore, CanvasNodeStore, NodeCollectionStore, StaticTextNodeStore, StoreType, VideoNodeStore } from "../../stores";
 import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { WebsiteNodeStore } from "../../stores/WebsiteNodeStore";
 import { NodeStore } from "../../stores";
 import { NodeLink } from "../NodeLink/NodeLink";
-import { ArcherContainer, ArcherElement } from 'react-archer';
+import { NodePosition } from "../../stores";
+import { CanvasType } from "../../stores";
 import "./SideBar.scss";
 
 interface SideBarProps {
-    collection: NodeCollectionStore;
+    currentCanvas: CanvasNodeStore;
+    canvasCollection: CanvasCollectionStore
 }
 
 // A wrapper class for a top hotbar which allows for user interaction with the nodes on the canvas
 @observer
 export class SideBar extends React.Component<SideBarProps> {
     render() {
-        let collection = this.props.collection;
+        let canvasCollection = this.props.canvasCollection;
+        let collection = this.props.currentCanvas.childrenNodes;
+        let currentCanvas = this.props.currentCanvas;
         // Makes a navigation bar which individually adds nodes to the scene based on individual types, also prompts user for relevant information (i.e. the title, url, text)
         return (
             <nav className="nav">
@@ -29,6 +33,9 @@ export class SideBar extends React.Component<SideBarProps> {
                         new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', "https://img.pokemondb.net/artwork/large/muk.jpg") as string}))}>Add Image Node</button></li>
                     <li><button onClick={() => this.removeNode(collection)}>Remove Node</button></li>
                     <li><button onClick={() => this.linkNodes(collection)}>Link Nodes</button></li>
+                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas)}>Add Canvas Node</button></li>
+                    <li><button onClick={() => this.enterCanvas(canvasCollection, currentCanvas)}>Enter Canvas</button></li>
+                    <li><button onClick={() => this.exitCanvas(currentCanvas)}></button></li>
                 </ul>
             </nav>
         )
@@ -36,7 +43,6 @@ export class SideBar extends React.Component<SideBarProps> {
     // Takes a node and adds it to the node collection (so it can be removed)
     addNode = (collection: NodeCollectionStore, store: NodeStore): void => {
         collection.addNode(store);
-        console.log(store.x)
     }
 
     // Removes all selected nodes from the screen
@@ -48,7 +54,49 @@ export class SideBar extends React.Component<SideBarProps> {
         if (collection.numOfSelectedNodes === 2) {
             collection.addLinkedNodes()
             new NodeLink({node1: collection.selectedNodes[0], node2: collection.selectedNodes[1], collection: collection})
-            console.log(collection.linkedNodes)
+        }
+    }
+    
+    addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore): void => {
+        var canvasStore = new CanvasNodeStore({type: StoreType.FreeformCanvas, canvasType: CanvasType.FreeformCanvas, prevNode: currentCanvas, childrenNodes: new NodeCollectionStore()});
+        this.addNode(currentCanvas.childrenNodes, canvasStore);
+        canvasCollection.addCanvas(canvasStore)
+    }
+
+    enterCanvas = (canvas: CanvasCollectionStore, currentCanvas: CanvasNodeStore): void => {
+    let selectedCanvas: CanvasNodeStore | null = null;
+
+    // Identify the currently selected canvas
+    for (let i = 0; i < canvas.canvasCollection.length; i++) {
+        if (canvas.canvasCollection[i].position === NodePosition.Selected && canvas.canvasCollection[i] !== currentCanvas) {
+            selectedCanvas = canvas.canvasCollection[i];
+            break; // Stop once the selected canvas is found
+        }
+    }
+
+    if (!selectedCanvas) {
+        console.warn("No selected canvas found!");
+        return;
+    }
+
+    // Deactivate the currently rendered canvas
+    for (let i = 0; i < canvas.canvasCollection.length; i++) {
+        if (canvas.canvasCollection[i].isRenderedNode) {
+            canvas.canvasCollection[i].isRenderedNode = false;
+            break; // Stop after deactivating the rendered canvas
+        }
+    }
+
+    // Activate the selected canvas
+    selectedCanvas.isRenderedNode = true;
+    currentCanvas.childrenNodes.unselectAllNodes();
+    };
+
+    exitCanvas = (currentCanvas: CanvasNodeStore) => {
+        var newRenderedCanvas = currentCanvas.prevNode;
+        if (newRenderedCanvas != undefined) {
+            currentCanvas.isRenderedNode = false;
+            newRenderedCanvas.isRenderedNode = true;
         }
     }
 }

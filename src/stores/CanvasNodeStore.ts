@@ -42,4 +42,7 @@ export class CanvasNodeStore extends NodeStore {
 
     @observable
     public canvasType: CanvasType | null = null;
+
+    @observable
+    public title: string | undefined;
 }

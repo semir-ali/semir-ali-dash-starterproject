@@ -103,13 +103,13 @@ export class Utils {
             store.position = NodePosition.Unselected;
             store.opacity = 1;
             document.removeEventListener("pointermove", (e) => this.moveNewNode(e, store));
-            console.log(store.x)
         }
         // If the node has been placed but is unselected, selects it, meaning it is able to be removed and resized 
         else if (store.position === NodePosition.Unselected) {
             store.position = NodePosition.Selected;
             store.resizableNodeVisibility = ResizableNodesVisibility.Visible;
             collection.addSelectedNodes(store);
+            console.log(collection.selectedNodes.length)
         }
         // If the node is selected, unselects it, making it moveable but not resizable
         else if (store.position === NodePosition.Selected) {

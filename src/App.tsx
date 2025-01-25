@@ -3,10 +3,13 @@ import './App.scss';
 import { CanvasCollectionStore, CanvasNodeStore, NodeCollectionStore, NodeStore, StaticTextNodeStore, StoreType, VideoNodeStore } from './stores';
 import { FreeFormCanvas } from './views/nodes/freeformcanvas/FreeFormCanvas';
 import { CanvasType } from './stores';
+import { SideBar } from './views/sidebar/SideBar';
+import { observer } from 'mobx-react';
 
 //
 const mainCanvasCollection = new CanvasCollectionStore();
 
+@observer
 export class App extends React.Component {
     render() {
         if (mainCanvasCollection.canvasCollection.length === 0) {
@@ -19,6 +22,7 @@ export class App extends React.Component {
             return (
             <div className="App">
                 <FreeFormCanvas store={mainCanvasCollection.renderedNode} collection={mainCanvasCollection.renderedNode.childrenNodes} /> 
+                <SideBar currentCanvas={mainCanvasCollection.renderedNode} canvasCollection={mainCanvasCollection}/>
             </div>
             )
         }

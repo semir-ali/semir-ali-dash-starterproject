@@ -5,7 +5,8 @@ export enum StoreType {
     Text, 
     Video,
     Image,
-    Website
+    Website,
+    FreeformCanvas
 }
 
 /**
@@ -46,7 +47,6 @@ export class NodeStore {
 
     @observable
     public height: number = 500;
-
 
     @observable
     public x: number = 0;
