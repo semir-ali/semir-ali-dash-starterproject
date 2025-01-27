@@ -43,10 +43,10 @@ export class NodeStore {
     public position: NodePosition | NodePosition = NodePosition.Unplaced;
     
     @observable
-    public width: number = 600;
+    public width: number = 300
 
     @observable
-    public height: number = 500;
+    public height: number = 250;
 
     @observable
     public x: number = 0;

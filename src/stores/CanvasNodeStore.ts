@@ -8,7 +8,7 @@ import { CanvasCollectionStore } from "./CanvasCollectionStore";
 
 export enum CanvasType {
     FreeformCanvas,
-    Rep
+    Grid
 }
 /**
  * This acts as a wrapper component for two arrays, one for unselected nodes and one for selected nodes
@@ -31,18 +31,19 @@ export class CanvasNodeStore extends NodeStore {
         this.text = initializer.text;
         */
     }
+
+    // Pointer to the exterior canvas outside of a canvas
     @observable
     public prevNode: CanvasNodeStore | undefined;
 
+    // The individual nodes of the canvas
     @observable 
     public childrenNodes: NodeCollectionStore = new NodeCollectionStore();
 
+    // Determines if the node is the rendered node (meaning it is the backdrop of the scene)
     @observable
     public isRenderedNode: boolean = false;
 
     @observable
     public canvasType: CanvasType | null = null;
-
-    @observable
-    public title: string | undefined;
 }

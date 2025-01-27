@@ -2,6 +2,7 @@ import { Constants } from "./Constants";
 import { NodeStore, ResizableNodesVisibility } from "./stores";
 import { NodeCollectionStore, NodePosition } from "./stores";
 import { TopBar } from "./views/nodes";
+import { CanvasType } from "./stores";
 import { observer } from "mobx-react";
 import * as React from 'react';
 
@@ -24,8 +25,7 @@ export class Utils {
      * Renders a node with its content and top bar
      */
     public static renderNode = (className: string, store: NodeStore, collection: NodeCollectionStore, specificNodeContent: React.ReactNode) => {
-        return (
-            
+        return ( 
             <div className={className} style={{
                 transform: store.transform,
                 width: store.width,
@@ -34,7 +34,8 @@ export class Utils {
             }} onWheel={(e: React.WheelEvent) => {
                 e.stopPropagation();
                 e.preventDefault();
-            }} onClick={() => Utils.onClickEvent(collection, store)}>
+            }} 
+            onClick={() => Utils.onClickEvent(collection, store)}>
                 <TopBar store={store} />
                 <div className="scroll-box">
                     <div className="content">
@@ -57,6 +58,36 @@ export class Utils {
 
     //**************************************************************** MAYBE RESTYLE THIS */
 
+    public static renderStaticNode = (className: string, store: NodeStore, collection: NodeCollectionStore, specificNodeContent: React.ReactNode) => {
+        return ( 
+            <div className={className} style={{
+                transform: store.transform,
+                width: store.width,
+                height: store.height,
+                opacity: store.opacity + 0.5
+            }} onWheel={(e: React.WheelEvent) => {
+                e.stopPropagation();
+                e.preventDefault();
+            }} 
+            onClick={() => Utils.onClickEvent(collection, store)}>
+                <div className="scroll-box">
+                    <div className="content">
+                        {specificNodeContent}
+                    </div>
+                </div>
+                <div className="resize-square-bottom-right" style={{visibility: store.resizableNodeVisibility}}
+                onPointerDown={(e) => this.alterNode(e, store, "Resize Right")}></div>
+                <div className="resize-square-right" style={{visibility: store.resizableNodeVisibility}}
+                onPointerDown={(e) => this.alterNode(e, store, "Resize Right")}></div>
+                <div className="resize-square-bottom" style={{visibility: store.resizableNodeVisibility}}
+                onPointerDown={(e) => this.alterNode(e, store, "Resize")}></div>
+                <div className="resize-square-bottom-left" style={{visibility: store.resizableNodeVisibility}}
+                onPointerDown={(e) => this.alterNode(e, store, "Resize Left")}></div>
+                <div className="resize-square-left" style={{visibility: store.resizableNodeVisibility}}
+                onPointerDown={(e) => this.alterNode(e, store, "Resize Left")}></div>
+            </div>
+        )
+    }
     /**
      * Changes the node in some way (either resizing or moving)
      */

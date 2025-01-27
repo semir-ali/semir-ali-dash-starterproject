@@ -33,7 +33,7 @@ export class SideBar extends React.Component<SideBarProps> {
                         new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', "https://img.pokemondb.net/artwork/large/muk.jpg") as string}))}>Add Image Node</button></li>
                     <li><button onClick={() => this.removeNode(nodeCollection)}>Remove Node</button></li>
                     <li><button onClick={() => this.linkNodes(nodeCollection)}>Link Nodes</button></li>
-                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas)}>Add Canvas Node</button></li>
+                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection)}>Add Canvas Node</button></li>
                     <li><button onClick={() => this.enterCanvas(canvasCollection, currentCanvas)}>Enter Canvas</button></li>
                     <li><button onClick={() => this.exitCanvas(currentCanvas)}></button></li>
                 </ul>
@@ -42,6 +42,7 @@ export class SideBar extends React.Component<SideBarProps> {
     }
     // Takes a node and adds it to the node collection (so it can be removed)
     addNode = (nodeCollection: NodeCollectionStore, store: NodeStore): void => {
+        console.log(nodeCollection.Id)
         nodeCollection.addNode(store);
     }
 
@@ -51,15 +52,20 @@ export class SideBar extends React.Component<SideBarProps> {
     }
 
     linkNodes = (nodeCollection: NodeCollectionStore): void => {
+        for (let i = 0; i < nodeCollection.unselectedNodes.length; i++) {
+            if (nodeCollection.unselectedNodes[i].position = NodePosition.Selected) {
+                console.log('rep!');
+            }
+        }
         if (nodeCollection.numOfSelectedNodes === 2) {
             nodeCollection.addLinkedNodes()
             new NodeLink({node1: nodeCollection.selectedNodes[0], node2: nodeCollection.selectedNodes[1], nodeCollection: nodeCollection})
         }
     }
     
-    addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore): void => {
+    addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore, nodeCollection: NodeCollectionStore): void => {
         var canvasStore = new CanvasNodeStore({type: StoreType.FreeformCanvas, canvasType: CanvasType.FreeformCanvas, prevNode: currentCanvas, childrenNodes: new NodeCollectionStore()});
-        this.addNode(currentCanvas.childrenNodes, canvasStore);
+        this.addNode(nodeCollection, canvasStore);
         canvasCollection.addCanvas(canvasStore)
     }
 
@@ -76,14 +82,17 @@ export class SideBar extends React.Component<SideBarProps> {
 
     if (!selectedCanvas) return;
 
-    // Deactivate the currently rendered canvas (avoid all nodes being linked to it)
+    // Deactivate the currently rendered canvas
     for (let i = 0; i < canvas.canvasCollection.length; i++) {
-        canvas.canvasCollection[i].isRenderedNode = false;
+        if (canvas.canvasCollection[i].isRenderedNode) {
+            canvas.canvasCollection[i].isRenderedNode = false;
+            break; // Stop after deactivating the rendered canvas
+        }
     }
 
     // Activate the selected canvas
     selectedCanvas.isRenderedNode = true;
-};
+    };
 
     exitCanvas = (currentCanvas: CanvasNodeStore) => {
         var newRenderedCanvas = currentCanvas.prevNode;
