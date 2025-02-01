@@ -3,7 +3,18 @@ import { NodeStore, ResizableNodesVisibility } from "./stores";
 import { NodeCollectionStore, NodePosition } from "./stores";
 import { TopBar } from "./views/nodes";
 import { CanvasType } from "./stores";
-import { observer } from "mobx-react";
+import { StoreType } from "./stores";
+import { CanvasNodeStore } from "./stores";
+import { FreeFormCanvas } from "./views/nodes/freeformcanvas/FreeFormCanvas";
+import { WebsiteNodeStore } from "./stores/WebsiteNodeStore";
+import { WebsiteNodeView } from "./views/nodes/WebsiteNodeView";
+import { StaticTextNodeStore } from "./stores";
+import { TextNodeView } from "./views/nodes";
+import { VideoNodeStore } from "./stores";
+import { VideoNodeView } from "./views/nodes";
+import { ImageNodeStore } from "./stores/ImageNodeStore";
+import { ImageNodeView } from "./views/nodes/ImageNodeView";
+import { GridCanvas } from "./views/nodes/GridCanvas/GridCanvas";
 import * as React from 'react';
 
 /**
@@ -22,15 +33,72 @@ export class Utils {
     // The following methods are shared amongst all the nodes
 
     /**
+     * Renders a canvas
+     */
+    public static renderCanvas = (collection: NodeCollectionStore, className: string) => {
+        return (
+            collection.unselectedNodes.map(nodeStore => {
+            switch (nodeStore.type) {
+                case StoreType.Text:
+                    return (<div key={Utils.GenerateGuid()} className={className}>
+                    <TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={collection} canvastype={CanvasType.FreeformCanvas}/>
+                    </div>);
+                case StoreType.Video:
+                    return (<div key={Utils.GenerateGuid()} className={className}>
+                        <VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={collection}
+                    canvastype={CanvasType.FreeformCanvas}/>
+                    </div>);
+                case StoreType.Image:
+                    return (<div key={Utils.GenerateGuid()} className={className}>
+                        <ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection}
+                    canvastype={CanvasType.FreeformCanvas}/>
+                    </div>);
+                case StoreType.Website:
+                    return (<div key={Utils.GenerateGuid()} className={className}>
+                        <WebsiteNodeView key={nodeStore.Id} store={nodeStore as WebsiteNodeStore} collection={collection}
+                    canvastype={CanvasType.FreeformCanvas}/>
+                    </div>);
+                case StoreType.FreeformCanvas:
+                    const canvasNode = nodeStore as CanvasNodeStore;
+                    if (canvasNode.prevNode !== undefined) {
+                        return (<div key={Utils.GenerateGuid()} className={className}>
+                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.prevNode.childrenNodes}/>
+                            </div>);
+                    }
+                    else {
+                        return (<div key={Utils.GenerateGuid()} className={className}>
+                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.childrenNodes}/>
+                            </div>);
+                    }
+                case StoreType.Grid:
+                    const gridCanvasNode = nodeStore as CanvasNodeStore;
+                    if (gridCanvasNode.prevNode !== undefined) {
+                        return (<div key={Utils.GenerateGuid()} className={className}>
+                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.prevNode.childrenNodes}/>
+                            </div>);
+                    }
+                    else {
+                        return (<div key={Utils.GenerateGuid()} className={className}>
+                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.childrenNodes}/>
+                            </div>);
+                        }
+                default:
+                    return null;
+            }
+        })
+        )
+    }
+    
+    /**
      * Renders a node with its content and top bar
      */
-    public static renderNode = (className: string, store: NodeStore, collection: NodeCollectionStore, specificNodeContent: React.ReactNode) => {
+    public static renderNode = (className: string, store: NodeStore, collection: NodeCollectionStore, 
+        specificNodeContent: React.ReactNode) => {
         return ( 
             <div className={className} style={{
                 transform: store.transform,
                 width: store.width,
-                height: store.height,
-                opacity: store.opacity
+                height: store.height
             }} onWheel={(e: React.WheelEvent) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -56,38 +124,7 @@ export class Utils {
         )
     }
 
-    //**************************************************************** MAYBE RESTYLE THIS */
 
-    public static renderStaticNode = (className: string, store: NodeStore, collection: NodeCollectionStore, specificNodeContent: React.ReactNode) => {
-        return ( 
-            <div className={className} style={{
-                transform: store.transform,
-                width: store.width,
-                height: store.height,
-                opacity: store.opacity + 0.5
-            }} onWheel={(e: React.WheelEvent) => {
-                e.stopPropagation();
-                e.preventDefault();
-            }} 
-            onClick={() => Utils.onClickEvent(collection, store)}>
-                <div className="scroll-box">
-                    <div className="content">
-                        {specificNodeContent}
-                    </div>
-                </div>
-                <div className="resize-square-bottom-right" style={{visibility: store.resizableNodeVisibility}}
-                onPointerDown={(e) => this.alterNode(e, store, "Resize Right")}></div>
-                <div className="resize-square-right" style={{visibility: store.resizableNodeVisibility}}
-                onPointerDown={(e) => this.alterNode(e, store, "Resize Right")}></div>
-                <div className="resize-square-bottom" style={{visibility: store.resizableNodeVisibility}}
-                onPointerDown={(e) => this.alterNode(e, store, "Resize")}></div>
-                <div className="resize-square-bottom-left" style={{visibility: store.resizableNodeVisibility}}
-                onPointerDown={(e) => this.alterNode(e, store, "Resize Left")}></div>
-                <div className="resize-square-left" style={{visibility: store.resizableNodeVisibility}}
-                onPointerDown={(e) => this.alterNode(e, store, "Resize Left")}></div>
-            </div>
-        )
-    }
     /**
      * Changes the node in some way (either resizing or moving)
      */
@@ -101,6 +138,11 @@ export class Utils {
             if (altercation === "Move") {
                 store.x += e.movementX;
                 store.y += e.movementY;
+                // Meaning this is the freeform canvas the nodes are on
+                if (store.type === null) {
+                    store.xOffset += e.movementX;
+                    store.yOffset += e.movementY;
+                }
             }
             else {
                 if (altercation === "Resize Left") {
@@ -132,15 +174,13 @@ export class Utils {
         // If the node is just created and has not been placed, places it (stops movement) and makes it unselected
         if (store.position === NodePosition.Unplaced) {
             store.position = NodePosition.Unselected;
-            store.opacity = 1;
-            document.removeEventListener("pointermove", (e) => this.moveNewNode(e, store));
+            document.removeEventListener("pointermove", (e) => this.moveNewNode(e, store, collection));
         }
         // If the node has been placed but is unselected, selects it, meaning it is able to be removed and resized 
         else if (store.position === NodePosition.Unselected) {
             store.position = NodePosition.Selected;
             store.resizableNodeVisibility = ResizableNodesVisibility.Visible;
             collection.addSelectedNodes(store);
-            console.log(collection.selectedNodes.length)
         }
         // If the node is selected, unselects it, making it moveable but not resizable
         else if (store.position === NodePosition.Selected) {
@@ -151,10 +191,10 @@ export class Utils {
     };
 
     // When the node is first created, allows the user to move it around the canvas
-    public static moveNewNode = (e: PointerEvent, store: NodeStore) => {
-        if (store.position == NodePosition.Unplaced) {
-            store.x = e.x - store.width * Constants.UNPLACED_NODE_X_OFFSET;
-            store.y = e.y - store.height * Constants.UNPLACED_NODE_Y_OFFSET;
+    public static moveNewNode = (e: PointerEvent, store: NodeStore, collection: NodeCollectionStore) => {
+        if (store.position === NodePosition.Unplaced) {
+            store.x = e.x - store.width * Constants.UNPLACED_NODE_X_OFFSET - collection.xOffset;
+            store.y = e.y - store.height * Constants.UNPLACED_NODE_Y_OFFSET - collection.yOffset;
         }
     }
 }

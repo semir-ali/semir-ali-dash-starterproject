@@ -13,3 +13,9 @@
 .box {
     box-sizing: border-box;
 }
+.node {
+    &.gridNode {
+        background: grey;
+        border: 10px transparent;
+    }
+}

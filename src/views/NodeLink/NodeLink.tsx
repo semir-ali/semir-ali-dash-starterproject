@@ -1,7 +1,8 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
-import { NodeStore } from "../../stores";
+import { NodeStore, ResizableNodesVisibility } from "../../stores";
 import { NodeCollectionStore } from "../../stores";
+import { NodePosition } from "../../stores";
 
 interface NodeLinkProps {
     node1: NodeStore;
@@ -24,22 +25,27 @@ render() {
     const finalY = node2.y + (node2.height/2);
     const distance = this.findProperty(initialX, initialY, finalX, finalY, "Distance");
     const angle = this.findProperty(initialX, initialY, finalX, finalY, "Angle of rotation");
-    return (
-        <div
-            className="nodelink"
-            style={{
-                position: "absolute",
-                top: initialY,
-                left: initialX,
-                width: distance, // Width is the distance between the nodes
-                height: "10px",
-                backgroundColor: "blue",
-                transform: `rotate(${angle}rad)`, // Allows the link to rotate
-                transformOrigin: "0 50%", // Rotate around the starting point
-                }}
-                onClick={e => this.centerLinkedNode(e, nodeCollection, node1, node2)}
-        ></div>
-    );
+    console.log(node1)
+    console.log(node2)
+    if (node1.linkedNode && node2.linkedNode)
+    {
+        return (
+            <div
+                className="nodelink"
+                style={{
+                    position: "absolute",
+                    top: initialY,
+                    left: initialX,
+                    width: distance, // Width is the distance between the nodes
+                    height: "10px",
+                    backgroundColor: "blue",
+                    transform: `rotate(${angle}rad)`, // Allows the link to rotate
+                    transformOrigin: "0 50%", // Rotate around the starting point
+                    }}
+                    onClick={e => this.centerLinkedNode(e, nodeCollection, node1, node2)}
+            ></div>
+        );
+    }
     }
 
     findProperty = (initialX: number, initialY: number, finalX: number, finalY: number, formula: string) => {
@@ -54,19 +60,31 @@ render() {
     }
 
     centerLinkedNode = (e: React.MouseEvent, nodeCollection: NodeCollectionStore, node1: NodeStore, node2: NodeStore) => {
-        const node1DistanceFromCenter = this.findProperty(e.pageX, e.pageY, node1.centerX, node1.centerY, "Distance") as number;
-        const node2DistanceFromCenter = this.findProperty(e.pageX, e.pageY, node2.centerX, node2.centerY, "Distance") as number;
+        if (node1.position === NodePosition.Selected && node2.position === NodePosition.Selected) return;
+        node1.centerX = node1.x + (node1.width/2)
+        node1.centerY = node1.y + (node1.height/2)
+        node2.centerX = node2.x + (node2.width/2)
+        node2.centerY = node2.y + (node2.height/2)
         var xDistanceFromMouse = 0;
         var yDistanceFromMouse = 0;
-        if (node1DistanceFromCenter > node2DistanceFromCenter) {
-            xDistanceFromMouse = node1.centerX - e.pageX;
-            yDistanceFromMouse = node1.centerY - e.pageY;
+        if (node1.position === NodePosition.Selected) {
+            xDistanceFromMouse = -(node2.centerX - e.pageX + nodeCollection.xOffset);
+            yDistanceFromMouse = -(node2.centerY - e.pageY + nodeCollection.yOffset);
+            node1.position = NodePosition.Unselected;
+            node1.resizableNodeVisibility = ResizableNodesVisibility.Hidden;
         }
         else {
-            xDistanceFromMouse = node2.centerX - e.pageX;
-            yDistanceFromMouse = node2.centerY - e.pageY;
+            xDistanceFromMouse = -(node1.centerX - e.pageX + nodeCollection.xOffset);
+            yDistanceFromMouse = -(node1.centerY - e.pageY + nodeCollection.yOffset);
+            node2.position = NodePosition.Unselected;
+            node2.resizableNodeVisibility = ResizableNodesVisibility.Hidden;
         }
-        nodeCollection.moveAllNodes(xDistanceFromMouse, yDistanceFromMouse)
+        nodeCollection.x += xDistanceFromMouse;
+        nodeCollection.xOffset += xDistanceFromMouse;
+
+        nodeCollection.y += yDistanceFromMouse;
+        nodeCollection.yOffset += yDistanceFromMouse;
+
         nodeCollection.unselectAllNodes();
     }
 }

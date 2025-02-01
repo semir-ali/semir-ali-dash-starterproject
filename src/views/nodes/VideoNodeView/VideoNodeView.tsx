@@ -19,27 +19,17 @@ export class VideoNodeView extends React.Component<VideoNodeProps> {
     render() {
         let store = this.props.store;
         let collection = this.props.collection;
-        let canvastype = this.props.canvastype;
-        if (canvastype === CanvasType.FreeformCanvas) {
-            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store))
-            return (
-                <div>
-                    {Utils.renderNode("node videoNode", store, collection,
-                    <div>
-                    <h3 className="title">{store.title}</h3>
-                    <video src={store.url} controls/>
-                </div>)}
-                </div>
-            )
+        let canvasType = this.props.canvastype;
+        let nodeContent = <div>
+                            <h3 className="title">{store.title}</h3>
+                            <video src={store.url} controls/>
+                        </div>
+        if (canvasType === CanvasType.FreeformCanvas) {
+            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection));
         }
-        else {
-            return (
-                Utils.renderStaticNode("node videoNode", store, collection,
-                    <div>
-                    <h3 className="title">{store.title}</h3>
-                    <video src={store.url} controls />
-                </div>)
+        return (
+            Utils.renderNode("node videoNode", store, collection,
+                nodeContent)
             )
         }
     }
-}

@@ -6,7 +6,8 @@ export enum StoreType {
     Video,
     Image,
     Website,
-    FreeformCanvas
+    FreeformCanvas,
+    Grid
 }
 
 /**
@@ -32,6 +33,11 @@ export enum ResizableNodesVisibility {
     Hidden = "hidden",
     Visible = "visible"
 }
+
+export enum Opacity {
+    Transparent = 0.5,
+    Visible = 1
+}
 // Contains all the information for all nodes
 export class NodeStore {
 
@@ -40,7 +46,13 @@ export class NodeStore {
     public type: StoreType | null = null;
 
     @observable
+    public linkedNode: boolean = false;
+
+    @observable
     public position: NodePosition | NodePosition = NodePosition.Unplaced;
+
+    @observable
+    public opacity: Opacity | Opacity = Opacity.Transparent;
     
     @observable
     public width: number = 300
@@ -61,13 +73,16 @@ export class NodeStore {
     public centerY: number = this.y + (this.height/2);
 
     @observable
+    public xOffset: number = 0;
+
+    @observable
+    public yOffset: number = 0;
+
+    @observable
     public border: string = "4px";
 
     @observable
     public outline: string = "transparent";
-
-    @observable
-    public opacity: number = .5;
 
     @observable
     public connectedNodeId: string = this.Id;

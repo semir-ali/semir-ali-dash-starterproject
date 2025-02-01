@@ -1,8 +1,5 @@
 import { computed, observable, action } from "mobx";
-import { NodeStore } from "./NodeStore";
-import { observer } from "mobx-react";
-import * as React from 'react';
-import { ArcherContainer, ArcherElement } from 'react-archer';
+import { NodeStore, ResizableNodesVisibility } from "./NodeStore";
 
 /**
  * This acts as a wrapper component for two arrays, one for unselected nodes and one for selected nodes
@@ -17,6 +14,9 @@ export class NodeCollectionStore extends NodeStore {
 
     @observable
     public linkedNodes: NodeStore[][] = [];
+
+    @observable
+    public editingText: boolean = false;
 
     @computed
     public get transform(): string {
@@ -41,6 +41,8 @@ export class NodeCollectionStore extends NodeStore {
 
     @action
     public addLinkedNodes() {
+        this.selectedNodes[0].linkedNode = true;
+        this.selectedNodes[1].linkedNode = true;
         this.linkedNodes.push([this.selectedNodes[0], this.selectedNodes[1]]);
     }
     // Adds a node to the selected nodes array
@@ -59,11 +61,13 @@ export class NodeCollectionStore extends NodeStore {
     public removeSelectedNodes(): void {
         this.selectedNodes.forEach((selectedNode) =>
             {const index = this.unselectedNodes.indexOf(selectedNode)
+            selectedNode.linkedNode = false;
             this.unselectedNodes.splice(index, 1)})
         this.selectedNodes = new Array<NodeStore>();
     }
     @action
     public unselectAllNodes(): void {
+        this.selectedNodes.map(node => node.resizableNodeVisibility = ResizableNodesVisibility.Hidden)
         this.selectedNodes = new Array<NodeStore>();
     }
     @action

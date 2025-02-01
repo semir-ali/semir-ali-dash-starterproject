@@ -7,16 +7,16 @@ import { NodeStore } from "../../stores";
 import { NodeLink } from "../NodeLink/NodeLink";
 import { NodePosition } from "../../stores";
 import { CanvasType } from "../../stores";
-import "./SideBar.scss";
+import "./HotBar.scss";
 
-interface SideBarProps {
+interface HotBarProps {
     currentCanvas: CanvasNodeStore;
     canvasCollection: CanvasCollectionStore
 }
 
 // A wrapper class for a top hotbar which allows for user interaction with the nodes on the canvas
 @observer
-export class SideBar extends React.Component<SideBarProps> {
+export class HotBar extends React.Component<HotBarProps> {
     render() {
         let canvasCollection = this.props.canvasCollection;
         let nodeCollection = this.props.currentCanvas.childrenNodes;
@@ -31,18 +31,25 @@ export class SideBar extends React.Component<SideBarProps> {
                         Add Video Node</button></li>
                     <li><button onClick={() => this.addNode(nodeCollection, 
                         new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', "https://img.pokemondb.net/artwork/large/muk.jpg") as string}))}>Add Image Node</button></li>
+                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, StoreType.Grid,
+                        CanvasType.Grid)}>Add Grid Canvas Node</button></li>
+                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, StoreType.FreeformCanvas,
+                        CanvasType.FreeformCanvas)}>Add Freeform Canvas Node</button></li>
                     <li><button onClick={() => this.removeNode(nodeCollection)}>Remove Node</button></li>
                     <li><button onClick={() => this.linkNodes(nodeCollection)}>Link Nodes</button></li>
-                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection)}>Add Canvas Node</button></li>
+                    <li><button onClick={() => this.unselectNodes(nodeCollection)}>Unselect Nodes</button></li>
                     <li><button onClick={() => this.enterCanvas(canvasCollection, currentCanvas)}>Enter Canvas</button></li>
-                    <li><button onClick={() => this.exitCanvas(currentCanvas)}></button></li>
+                    <li><button onClick={() => this.exitCanvas(currentCanvas)}>Exit Canvas</button></li>
                 </ul>
             </nav>
         )
     }
+
+    unselectNodes = (nodeCollection: NodeCollectionStore): void => {
+        nodeCollection.unselectAllNodes();
+    }
     // Takes a node and adds it to the node collection (so it can be removed)
     addNode = (nodeCollection: NodeCollectionStore, store: NodeStore): void => {
-        console.log(nodeCollection.Id)
         nodeCollection.addNode(store);
     }
 
@@ -52,19 +59,14 @@ export class SideBar extends React.Component<SideBarProps> {
     }
 
     linkNodes = (nodeCollection: NodeCollectionStore): void => {
-        for (let i = 0; i < nodeCollection.unselectedNodes.length; i++) {
-            if (nodeCollection.unselectedNodes[i].position = NodePosition.Selected) {
-                console.log('rep!');
-            }
-        }
         if (nodeCollection.numOfSelectedNodes === 2) {
             nodeCollection.addLinkedNodes()
             new NodeLink({node1: nodeCollection.selectedNodes[0], node2: nodeCollection.selectedNodes[1], nodeCollection: nodeCollection})
         }
     }
     
-    addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore, nodeCollection: NodeCollectionStore): void => {
-        var canvasStore = new CanvasNodeStore({type: StoreType.FreeformCanvas, canvasType: CanvasType.FreeformCanvas, prevNode: currentCanvas, childrenNodes: new NodeCollectionStore()});
+    addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore, nodeCollection: NodeCollectionStore, storeType: StoreType, canvasType: CanvasType): void => {
+        var canvasStore = new CanvasNodeStore({type: storeType, canvasType: canvasType, prevNode: currentCanvas, childrenNodes: new NodeCollectionStore()});
         this.addNode(nodeCollection, canvasStore);
         canvasCollection.addCanvas(canvasStore)
     }
@@ -96,7 +98,7 @@ export class SideBar extends React.Component<SideBarProps> {
 
     exitCanvas = (currentCanvas: CanvasNodeStore) => {
         var newRenderedCanvas = currentCanvas.prevNode;
-        if (newRenderedCanvas != undefined) {
+        if (newRenderedCanvas !== undefined) {
             currentCanvas.isRenderedNode = false;
             newRenderedCanvas.isRenderedNode = true;
         }

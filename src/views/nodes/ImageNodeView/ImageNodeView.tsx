@@ -20,25 +20,16 @@ export class ImageNodeView extends React.Component<ImageNodeProps> {
     render() {
         let store = this.props.store;
         let collection = this.props.collection;
-        let canvastype = this.props.canvastype;
-        if (canvastype === CanvasType.FreeformCanvas) {
-            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store))
-            return (
-                <div>
-                    {Utils.renderNode("node imageNode", store, collection,
-                    <div>
-                                    <img src={store.url} />
-                                </div>)}
-                </div>
-            )
+        let canvasType = this.props.canvastype;
+        let nodeContent = <div>
+                                <img src={store.url}/>
+                            </div>
+        if (canvasType === CanvasType.FreeformCanvas) {
+            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection));
         }
-        else {
-            return (
-                Utils.renderStaticNode("node imageNode", store, collection,
-                    <div>
-                                    <img src={store.url} />
-                                </div>)
-            )
+        return (
+            Utils.renderNode("node videoNode", store, collection, 
+                nodeContent)
+        )
         }
     }
-}

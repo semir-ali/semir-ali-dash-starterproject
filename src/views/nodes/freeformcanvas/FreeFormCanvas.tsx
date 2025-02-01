@@ -1,70 +1,52 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
-import { CanvasNodeStore, CanvasType, NodeCollectionStore, StaticTextNodeStore, StoreType, VideoNodeStore } from "../../../stores";
-import { ImageNodeView } from "../ImageNodeView";
-import { ImageNodeStore } from "../../../stores/ImageNodeStore";
-import { TextNodeView, VideoNodeView } from "..";
-import { WebsiteNodeView } from "../WebsiteNodeView";
+import { CanvasNodeStore, NodeCollectionStore } from "../../../stores";
 import { NodeLink } from "../../NodeLink/NodeLink";
 import { Utils } from "../../../Utils";
 import "./FreeFormCanvas.scss";
+import { Constants } from "../../../Constants";
 
 interface FreeFormProps {
     store: CanvasNodeStore // Treats the canvas as an individual node
-    collection: NodeCollectionStore // Treats the canvas as a backdrop with multiple nodes\
+    collection: NodeCollectionStore // Treats the canvas as a backdrop with multiple nodes
+    previousCollection: NodeCollectionStore
 }
 
 // Acts as the overall backdrop of the scene, being able to control the movement of the nodes
 @observer
 export class FreeFormCanvas extends React.Component<FreeFormProps> {
     
+// We're going to do this later, but you know the fix
+// If the node is grid, make it static, if not make it moveable :grin:
 render() {
     let store = this.props.store;
-    let collection = this.props.collection
-    if (store.isRenderedNode === false) {
-        document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store));
-        return (
-            <div>
-                {Utils.renderNode("node freeformcanvasNode", store, collection,
-                                <div>
-                                    <div className="freeformcanvas" style={{ transform: collection.transform }}>
-                                        {collection.linkedNodes !== null ? 
+    let collection = this.props.collection;
+    let previousCollection = this.props.previousCollection;
+    let nodeContent = <div className="freeformcanvas" style={{ transform: previousCollection.transform }}>
+                        {previousCollection.linkedNodes !== null ? 
                         collection.linkedNodes.map(linkedNodes => (
-                            <NodeLink 
-                                key={Utils.GenerateGuid()} 
-                                node1={linkedNodes[0]}
-                                node2={linkedNodes[1]} 
-                                nodeCollection={collection}
-                            />
+                        <NodeLink 
+                            key={Utils.GenerateGuid()} 
+                            node1={linkedNodes[Constants.FIRST_NODE_INDEX]}
+                            node2={linkedNodes[Constants.SECOND_NODE_INDEX]} 
+                            nodeCollection={collection}
+                        />
                         )) : null
                     }
-                    {collection.unselectedNodes.map(nodeStore => {
-                        switch (nodeStore.type) {
-                            case StoreType.Text:
-                                return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={collection} canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.Video:
-                                return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={collection}
-                                canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.Image:
-                                return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection}
-                                canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.Website:
-                                return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection}
-                                canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.FreeformCanvas:
-                                const canvasNode = nodeStore as CanvasNodeStore;
-                                return (<FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes}/>);
-                            default:
-                                return null;
-                        }
-                    })}
-                    </div>
-                </div>)}
-            </div>
+                    {Utils.renderCanvas(collection, "none")}
+                </div>
+    document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection));
+    if (store.isRenderedNode === false) {
+        return (
+            Utils.renderNode("node freeformcanvasNode", store, previousCollection, 
+                nodeContent)
         );
     }
     return (
-        <div className="freeformcanvas-container" onPointerDown={e => Utils.alterNode(e, collection, "Move")}>
+        <div className="freeformcanvas-container" onPointerDown={e => 
+        {if (collection.selectedNodes.length === 0) {
+            Utils.alterNode(e, collection, "Move")
+        }}}>
             <div className="freeformcanvas" style={{ transform: collection.transform }}>
                 <div>
                     {collection.linkedNodes !== null ? 
@@ -77,26 +59,7 @@ render() {
                             />
                         )) : null
                     }
-                    {collection.unselectedNodes.map(nodeStore => {
-                        switch (nodeStore.type) {
-                            case StoreType.Text:
-                                return (<TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={collection}
-                                canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.Video:
-                                return (<VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={collection}
-                                canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.Image:
-                                return (<ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection}
-                                canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.Website:
-                                return (<WebsiteNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection} canvastype={CanvasType.FreeformCanvas}/>);
-                            case StoreType.FreeformCanvas:
-                                const canvasNode = nodeStore as CanvasNodeStore;
-                                return (<FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes}/>);
-                            default:
-                                return null;
-                        }
-                    })}
+                    {Utils.renderCanvas(collection, "none")}
                 </div>
             </div>
         </div>

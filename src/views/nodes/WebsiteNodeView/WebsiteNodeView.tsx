@@ -20,31 +20,18 @@ export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
     render() {
         let store = this.props.store;
         let collection = this.props.collection;
-        let canvastype = this.props.canvastype;
-        if (canvastype === CanvasType.FreeformCanvas) {
-            console.log("Rep!")
-            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store))
-            return (
-                <div>
-                    {Utils.renderNode("node websiteNode", store, collection,
-                    <div>
-                        <iframe src={store.url} />
+        let canvasType = this.props.canvastype;
+        let nodeContent = <div>
+                            <iframe src={store.url} />
                             <p>Not loading? Find your website at <a href={store.url}>{store.url}</a>
                             </p>
-                    </div>)}
-                </div>
-            )
-        }
-        else {
-            console.log("Rep!")
-            return (
-                Utils.renderStaticNode("node websiteNode", store, collection,
-                    <div>
-                        <iframe src={store.url} />
-                            <p>Not loading? Find your website at <a href={store.url}>{store.url}</a>
-                            </p>
-                    </div>)
+                        </div>
+        if (canvasType === CanvasType.FreeformCanvas) {
+            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection))
+            }
+        return (
+            Utils.renderNode("node websiteNode", store, collection,
+                nodeContent)
             )
         }
     }
-}
