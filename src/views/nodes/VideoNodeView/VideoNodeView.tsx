@@ -12,7 +12,7 @@ interface VideoNodeProps {
     canvastype: CanvasType;
 }
 
-// Visually represents the video node
+// Visually represents the video node on the canvas
 @observer
 export class VideoNodeView extends React.Component<VideoNodeProps> {
 
@@ -28,7 +28,7 @@ export class VideoNodeView extends React.Component<VideoNodeProps> {
             document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection));
         }
         return (
-            Utils.renderNode("node videoNode", store, collection,
+            Utils.renderNode("node videoNode", canvasType, store, collection,
                 nodeContent)
             )
         }

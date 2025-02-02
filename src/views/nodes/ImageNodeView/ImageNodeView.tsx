@@ -13,7 +13,7 @@ interface ImageNodeProps {
     canvastype: CanvasType
 }
 
-// Essentially represents the visual display of the image node
+// Essentially represents the visual display of the image node on the canvas
 @observer
 export class ImageNodeView extends React.Component<ImageNodeProps> {
 
@@ -28,7 +28,7 @@ export class ImageNodeView extends React.Component<ImageNodeProps> {
             document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection));
         }
         return (
-            Utils.renderNode("node videoNode", store, collection, 
+            Utils.renderNode("node videoNode", canvasType, store, collection, 
                 nodeContent)
         )
         }

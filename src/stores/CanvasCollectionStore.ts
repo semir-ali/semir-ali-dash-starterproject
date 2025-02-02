@@ -23,4 +23,10 @@ export class CanvasCollectionStore {
         // abitrary unrendered node (unreachable)
         return new CanvasNodeStore({isRenderedNode: false})
     }
+
+    // Resets the canvas 
+    @action 
+    public resetCanvas = (): void => {
+        this.canvasCollection = new Array<CanvasNodeStore>();
+    }
 }

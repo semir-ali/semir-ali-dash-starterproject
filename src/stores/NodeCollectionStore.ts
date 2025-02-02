@@ -1,5 +1,6 @@
 import { computed, observable, action } from "mobx";
 import { NodeStore, ResizableNodesVisibility } from "./NodeStore";
+import { Constants } from "../Constants";
 
 /**
  * This acts as a wrapper component for two arrays, one for unselected nodes and one for selected nodes
@@ -15,6 +16,7 @@ export class NodeCollectionStore extends NodeStore {
     @observable
     public linkedNodes: NodeStore[][] = [];
 
+    // Boolean that allows the text node to be editable
     @observable
     public editingText: boolean = false;
 
@@ -23,10 +25,6 @@ export class NodeCollectionStore extends NodeStore {
         return "translate(" + this.x + "px," + this.y + "px)"; // for CSS trnsform property
     }
 
-    @computed 
-    public get linkedNodesIds(): string[] {
-        return [this.selectedNodes[0].Id, this.selectedNodes[1].Id]
-    }
     // Checks if there are any selected nodes on the canvas
     @computed
     public get numOfSelectedNodes(): number {
@@ -38,12 +36,12 @@ export class NodeCollectionStore extends NodeStore {
     public addNode(store: NodeStore): void {
         this.unselectedNodes.push(store);
     }
-
+    // Makes the first two selected nodes linked
     @action
     public addLinkedNodes() {
-        this.selectedNodes[0].linkedNode = true;
-        this.selectedNodes[1].linkedNode = true;
-        this.linkedNodes.push([this.selectedNodes[0], this.selectedNodes[1]]);
+        this.selectedNodes[Constants.FIRST_NODE_INDEX].linkedNode = true;
+        this.selectedNodes[Constants.SECOND_NODE_INDEX].linkedNode = true;
+        this.linkedNodes.push([this.selectedNodes[Constants.FIRST_NODE_INDEX], this.selectedNodes[Constants.SECOND_NODE_INDEX]]);
     }
     // Adds a node to the selected nodes array
     @action
@@ -65,29 +63,26 @@ export class NodeCollectionStore extends NodeStore {
             this.unselectedNodes.splice(index, 1)})
         this.selectedNodes = new Array<NodeStore>();
     }
+    // Unselects all the nodes visible on screen
     @action
     public unselectAllNodes(): void {
         this.selectedNodes.map(node => node.resizableNodeVisibility = ResizableNodesVisibility.Hidden)
         this.selectedNodes = new Array<NodeStore>();
     }
-    @action
-    public moveAllNodes(xDistance: number, yDistance: number): void {
-        this.selectedNodes.forEach(node => {
-            node.centerX -= xDistance
-            node.centerY -= yDistance
-        })
-        this.unselectedNodes.forEach(node => {
-            node.x -= xDistance
-            node.y += yDistance
-        })
-    }
 
+    // Swaps two nodes, severing their current links on the canvas
     @action
-    public unlinkNodes(removedNode: NodeStore) {
-        this.linkedNodes.forEach(nodeArray => (node: number) => 
-                {if (nodeArray[node] === removedNode) {
-                this.linkedNodes.splice(this.linkedNodes.indexOf(nodeArray), 1)
-            }}
-        )
+    public swapNodes(): void {
+        if (this.selectedNodes.length !== 2) return;
+        const firstNodeXPosition = this.selectedNodes[Constants.FIRST_NODE_INDEX].x;
+        const firstNodeYPosition = this.selectedNodes[Constants.FIRST_NODE_INDEX].y;
+        const secondNodeXPosition = this.selectedNodes[Constants.SECOND_NODE_INDEX].x;
+        const secondNodeYPosition = this.selectedNodes[Constants.SECOND_NODE_INDEX].y;
+        this.selectedNodes[Constants.FIRST_NODE_INDEX].x = secondNodeXPosition;
+        this.selectedNodes[Constants.FIRST_NODE_INDEX].y = secondNodeYPosition;
+        this.selectedNodes[Constants.SECOND_NODE_INDEX].x = firstNodeXPosition;
+        this.selectedNodes[Constants.SECOND_NODE_INDEX].y = firstNodeYPosition;
+        this.selectedNodes[Constants.FIRST_NODE_INDEX].linkedNode = false;
+        this.selectedNodes[Constants.SECOND_NODE_INDEX].linkedNode = false;
     }
 }

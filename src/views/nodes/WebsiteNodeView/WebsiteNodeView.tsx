@@ -13,10 +13,9 @@ interface WebsiteNodeProps {
     canvastype: CanvasType;
 }
 
-// Visually shows the website node
+// Visually shows the website node on the canvas
 @observer
 export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
-
     render() {
         let store = this.props.store;
         let collection = this.props.collection;
@@ -30,7 +29,7 @@ export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
             document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection))
             }
         return (
-            Utils.renderNode("node websiteNode", store, collection,
+            Utils.renderNode("node websiteNode", canvasType, store, collection,
                 nodeContent)
             )
         }

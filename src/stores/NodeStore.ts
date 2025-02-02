@@ -1,5 +1,6 @@
 import { computed, observable } from "mobx";
 import { Utils } from "../Utils";
+import { Constants } from "../Constants";
 
 export enum StoreType {
     Text, 
@@ -34,10 +35,6 @@ export enum ResizableNodesVisibility {
     Visible = "visible"
 }
 
-export enum Opacity {
-    Transparent = 0.5,
-    Visible = 1
-}
 // Contains all the information for all nodes
 export class NodeStore {
 
@@ -50,24 +47,21 @@ export class NodeStore {
 
     @observable
     public position: NodePosition | NodePosition = NodePosition.Unplaced;
-
-    @observable
-    public opacity: Opacity | Opacity = Opacity.Transparent;
     
     @observable
-    public width: number = 300
+    public width: number = Constants.INITIAL_NODE_WIDTH;
 
     @observable
-    public height: number = 250;
+    public height: number = Constants.INITIAL_NODE_HEIGHT;
 
     @observable
-    public x: number = 0;
+    public x: number = Constants.INITIAL_NODE_X_POSITION;
 
     @observable 
     public centerX: number = this.x + (this.width / 2);
 
     @observable
-    public y: number = 0;
+    public y: number = Constants.INITIAL_NODE_Y_POSITION;
 
     @observable
     public centerY: number = this.y + (this.height/2);
@@ -76,16 +70,7 @@ export class NodeStore {
     public xOffset: number = 0;
 
     @observable
-    public yOffset: number = 0;
-
-    @observable
-    public border: string = "4px";
-
-    @observable
-    public outline: string = "transparent";
-
-    @observable
-    public connectedNodeId: string = this.Id;
+    public yOffset: number = 50;
 
     @observable
     public resizableNodeVisibility: ResizableNodesVisibility | ResizableNodesVisibility = ResizableNodesVisibility.Hidden;

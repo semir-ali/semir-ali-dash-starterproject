@@ -3,6 +3,7 @@ import * as React from 'react';
 import { NodeStore, ResizableNodesVisibility } from "../../stores";
 import { NodeCollectionStore } from "../../stores";
 import { NodePosition } from "../../stores";
+import { Constants } from "../../Constants";
 
 interface NodeLinkProps {
     node1: NodeStore;
@@ -25,20 +26,19 @@ render() {
     const finalY = node2.y + (node2.height/2);
     const distance = this.findProperty(initialX, initialY, finalX, finalY, "Distance");
     const angle = this.findProperty(initialX, initialY, finalX, finalY, "Angle of rotation");
-    console.log(node1)
-    console.log(node2)
+    // Checks if both nodes are linked (only possible if they have been linked and have not been deleted)
     if (node1.linkedNode && node2.linkedNode)
     {
         return (
             <div
                 className="nodelink"
                 style={{
-                    position: "absolute",
+                    position: Constants.LINK_POSITION,
                     top: initialY,
                     left: initialX,
                     width: distance, // Width is the distance between the nodes
-                    height: "10px",
-                    backgroundColor: "blue",
+                    height: Constants.LINK_LENGTH,
+                    backgroundColor: Constants.LINK_COLOR,
                     transform: `rotate(${angle}rad)`, // Allows the link to rotate
                     transformOrigin: "0 50%", // Rotate around the starting point
                     }}
@@ -48,6 +48,7 @@ render() {
     }
     }
 
+    // Uses the properties of the change in x and y to return relevant values (i.e. distance from two points and angle between two points)
     findProperty = (initialX: number, initialY: number, finalX: number, finalY: number, formula: string) => {
         const dx = finalX - initialX; // Change in x
         const dy = finalY - initialY; // Change in y
@@ -59,6 +60,7 @@ render() {
         }
     }
 
+    // When one linked node is selected and the node link is selected, moves the screen so the other node is the center of the screen
     centerLinkedNode = (e: React.MouseEvent, nodeCollection: NodeCollectionStore, node1: NodeStore, node2: NodeStore) => {
         if (node1.position === NodePosition.Selected && node2.position === NodePosition.Selected) return;
         node1.centerX = node1.x + (node1.width/2)

@@ -1,16 +1,10 @@
 import { Constants } from "./Constants";
-import { NodeStore, ResizableNodesVisibility } from "./stores";
-import { NodeCollectionStore, NodePosition } from "./stores";
 import { TopBar } from "./views/nodes";
-import { CanvasType } from "./stores";
-import { StoreType } from "./stores";
-import { CanvasNodeStore } from "./stores";
+import { CanvasType, StoreType, CanvasNodeStore, StaticTextNodeStore, VideoNodeStore, NodeCollectionStore, NodePosition, NodeStore, ResizableNodesVisibility } from "./stores";
 import { FreeFormCanvas } from "./views/nodes/freeformcanvas/FreeFormCanvas";
 import { WebsiteNodeStore } from "./stores/WebsiteNodeStore";
 import { WebsiteNodeView } from "./views/nodes/WebsiteNodeView";
-import { StaticTextNodeStore } from "./stores";
 import { TextNodeView } from "./views/nodes";
-import { VideoNodeStore } from "./stores";
 import { VideoNodeView } from "./views/nodes";
 import { ImageNodeStore } from "./stores/ImageNodeStore";
 import { ImageNodeView } from "./views/nodes/ImageNodeView";
@@ -18,7 +12,7 @@ import { GridCanvas } from "./views/nodes/GridCanvas/GridCanvas";
 import * as React from 'react';
 
 /**
- * Utility class for managing node operations
+ * Utility class for managing shared node operations
  */
 export class Utils {
 
@@ -33,53 +27,53 @@ export class Utils {
     // The following methods are shared amongst all the nodes
 
     /**
-     * Renders a canvas
+     * Renders a canvas with a corresponding collection of nodes
      */
-    public static renderCanvas = (collection: NodeCollectionStore, className: string) => {
+    public static renderCanvas = (collection: NodeCollectionStore, className: string, canvasType: CanvasType) => {
         return (
             collection.unselectedNodes.map(nodeStore => {
             switch (nodeStore.type) {
                 case StoreType.Text:
                     return (<div key={Utils.GenerateGuid()} className={className}>
-                    <TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} collection={collection} canvastype={CanvasType.FreeformCanvas}/>
+                    <TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} nodeCollection={collection} canvastype={canvasType}/>
                     </div>);
                 case StoreType.Video:
                     return (<div key={Utils.GenerateGuid()} className={className}>
                         <VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={collection}
-                    canvastype={CanvasType.FreeformCanvas}/>
+                    canvastype={canvasType}/>
                     </div>);
                 case StoreType.Image:
                     return (<div key={Utils.GenerateGuid()} className={className}>
                         <ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection}
-                    canvastype={CanvasType.FreeformCanvas}/>
+                    canvastype={canvasType}/>
                     </div>);
                 case StoreType.Website:
                     return (<div key={Utils.GenerateGuid()} className={className}>
                         <WebsiteNodeView key={nodeStore.Id} store={nodeStore as WebsiteNodeStore} collection={collection}
-                    canvastype={CanvasType.FreeformCanvas}/>
+                    canvastype={canvasType}/>
                     </div>);
                 case StoreType.FreeformCanvas:
                     const canvasNode = nodeStore as CanvasNodeStore;
                     if (canvasNode.prevNode !== undefined) {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.prevNode.childrenNodes}/>
+                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.prevNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                     }
                     else {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.childrenNodes}/>
+                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                     }
                 case StoreType.Grid:
                     const gridCanvasNode = nodeStore as CanvasNodeStore;
                     if (gridCanvasNode.prevNode !== undefined) {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.prevNode.childrenNodes}/>
+                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.prevNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                     }
                     else {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.childrenNodes}/>
+                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                         }
                 default:
@@ -90,9 +84,9 @@ export class Utils {
     }
     
     /**
-     * Renders a node with its content and top bar
+     * Renders a node with its content and top bar, is able to be resized based on if it is selected or not
      */
-    public static renderNode = (className: string, store: NodeStore, collection: NodeCollectionStore, 
+    public static renderNode = (className: string, canvasType: CanvasType, store: NodeStore, collection: NodeCollectionStore, 
         specificNodeContent: React.ReactNode) => {
         return ( 
             <div className={className} style={{
@@ -104,7 +98,7 @@ export class Utils {
                 e.preventDefault();
             }} 
             onClick={() => Utils.onClickEvent(collection, store)}>
-                <TopBar store={store} />
+                <TopBar store={store} canvasType={canvasType} />
                 <div className="scroll-box">
                     <div className="content">
                         {specificNodeContent}
@@ -193,8 +187,8 @@ export class Utils {
     // When the node is first created, allows the user to move it around the canvas
     public static moveNewNode = (e: PointerEvent, store: NodeStore, collection: NodeCollectionStore) => {
         if (store.position === NodePosition.Unplaced) {
-            store.x = e.x - store.width * Constants.UNPLACED_NODE_X_OFFSET - collection.xOffset;
-            store.y = e.y - store.height * Constants.UNPLACED_NODE_Y_OFFSET - collection.yOffset;
+            store.x = e.x - (store.width * Constants.UNPLACED_NODE_X_OFFSET) - collection.xOffset;
+            store.y = e.y - (store.height * Constants.UNPLACED_NODE_Y_OFFSET) - collection.yOffset;
         }
     }
 }

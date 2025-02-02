@@ -8,10 +8,11 @@ import { NodeLink } from "../NodeLink/NodeLink";
 import { NodePosition } from "../../stores";
 import { CanvasType } from "../../stores";
 import "./HotBar.scss";
+import { Constants } from "../../Constants";
 
 interface HotBarProps {
     currentCanvas: CanvasNodeStore;
-    canvasCollection: CanvasCollectionStore
+    canvasCollection: CanvasCollectionStore;
 }
 
 // A wrapper class for a top hotbar which allows for user interaction with the nodes on the canvas
@@ -25,26 +26,28 @@ export class HotBar extends React.Component<HotBarProps> {
         return (
             <nav className="nav">
                 <ul>
-                    <li><button onClick={() => this.addNode(nodeCollection, new StaticTextNodeStore({type: StoreType.Text, title: prompt('Title? ', "untitled") as string, text: prompt('Text? ', "untitled") as string}))}>Add Text Node</button></li>
-                    <li><button onClick={() => this.addNode(nodeCollection, new WebsiteNodeStore({type: StoreType.Website, url: prompt('Which website do you want displayed? ', 'https://www.google.com') as string}))}>Add Website Node</button></li>
-                    <li><button onClick={() => this.addNode(nodeCollection, new VideoNodeStore({type: StoreType.Video, url: prompt('What is the url of your video? ', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4') as string}))}>
+                    <li><button onClick={() => this.addNode(nodeCollection, new StaticTextNodeStore({type: StoreType.Text, title: prompt('Title? ', "untitled") as string, text: prompt('Text? ', Constants.DEFAULT_TEXT) as string}))}>Add Text Node</button></li>
+                    <li><button onClick={() => this.addNode(nodeCollection, new WebsiteNodeStore({type: StoreType.Website, url: prompt('Which website do you want displayed? ', Constants.DEFAULT_WEBSITE) as string}))}>Add Website Node</button></li>
+                    <li><button onClick={() => this.addNode(nodeCollection, new VideoNodeStore({type: StoreType.Video, url: prompt('What is the url of your video? ', Constants.DEFAULT_VIDEO) as string}))}>
                         Add Video Node</button></li>
                     <li><button onClick={() => this.addNode(nodeCollection, 
-                        new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', "https://img.pokemondb.net/artwork/large/muk.jpg") as string}))}>Add Image Node</button></li>
-                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, StoreType.Grid,
-                        CanvasType.Grid)}>Add Grid Canvas Node</button></li>
-                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, StoreType.FreeformCanvas,
-                        CanvasType.FreeformCanvas)}>Add Freeform Canvas Node</button></li>
+                        new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', Constants.DEFAULT_IMAGE) as string}))}>Add Image Node</button></li>
+                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, CanvasType.FreeformCanvas, StoreType.FreeformCanvas)}>Add Freeform Canvas Node</button></li>
+                    <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, CanvasType.Grid, StoreType.Grid)}>Add Grid Canvas Node</button></li>
                     <li><button onClick={() => this.removeNode(nodeCollection)}>Remove Node</button></li>
                     <li><button onClick={() => this.linkNodes(nodeCollection)}>Link Nodes</button></li>
                     <li><button onClick={() => this.unselectNodes(nodeCollection)}>Unselect Nodes</button></li>
                     <li><button onClick={() => this.enterCanvas(canvasCollection, currentCanvas)}>Enter Canvas</button></li>
                     <li><button onClick={() => this.exitCanvas(currentCanvas)}>Exit Canvas</button></li>
+                    <li><button onClick={() => nodeCollection.swapNodes()}>Swap Nodes</button></li>
+                    <li><button onClick={() => currentCanvas.switchModes()}>Change Modes</button></li>
+                    <li><button onClick={() => canvasCollection.resetCanvas()}>Reset Canvas</button></li>
+
                 </ul>
             </nav>
         )
     }
-
+    //Unselects nodes
     unselectNodes = (nodeCollection: NodeCollectionStore): void => {
         nodeCollection.unselectAllNodes();
     }
@@ -58,14 +61,15 @@ export class HotBar extends React.Component<HotBarProps> {
         nodeCollection.removeSelectedNodes();
     }
 
+    // Links two nodes together
     linkNodes = (nodeCollection: NodeCollectionStore): void => {
         if (nodeCollection.numOfSelectedNodes === 2) {
             nodeCollection.addLinkedNodes()
-            new NodeLink({node1: nodeCollection.selectedNodes[0], node2: nodeCollection.selectedNodes[1], nodeCollection: nodeCollection})
+            new NodeLink({node1: nodeCollection.selectedNodes[Constants.FIRST_NODE_INDEX], node2: nodeCollection.selectedNodes[Constants.SECOND_NODE_INDEX], nodeCollection: nodeCollection})
         }
     }
-    
-    addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore, nodeCollection: NodeCollectionStore, storeType: StoreType, canvasType: CanvasType): void => {
+    // Specifically adds a canvas to the current canvas
+    addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore, nodeCollection: NodeCollectionStore, canvasType: CanvasType, storeType: StoreType): void => {
         var canvasStore = new CanvasNodeStore({type: storeType, canvasType: canvasType, prevNode: currentCanvas, childrenNodes: new NodeCollectionStore()});
         this.addNode(nodeCollection, canvasStore);
         canvasCollection.addCanvas(canvasStore)
@@ -96,6 +100,7 @@ export class HotBar extends React.Component<HotBarProps> {
     selectedCanvas.isRenderedNode = true;
     };
 
+    // Exits the canvas
     exitCanvas = (currentCanvas: CanvasNodeStore) => {
         var newRenderedCanvas = currentCanvas.prevNode;
         if (newRenderedCanvas !== undefined) {

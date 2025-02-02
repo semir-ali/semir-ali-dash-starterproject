@@ -1,35 +1,25 @@
-import { computed, observable, action } from "mobx";
+import { action, observable} from "mobx";
 import { NodeStore } from "./NodeStore";
-import { observer } from "mobx-react";
-import * as React from 'react';
-import { ArcherContainer, ArcherElement } from 'react-archer';
 import { NodeCollectionStore } from "./NodeCollectionStore";
-import { CanvasCollectionStore } from "./CanvasCollectionStore";
+import { Constants } from "../Constants";
 
 export enum CanvasType {
     FreeformCanvas,
     Grid
+}
+
+export enum CanvasMode {
+    defaultMode = Constants.NORMAL_BACKGROUND_BRIGHTNESS,
+    darkMode = Constants.DARK_BACKGROUND_BRIGHTNESS,
+    lightMode = Constants.BRIGHT_BACKGROUND_BRIGHTNESS
 }
 /**
  * This acts as a wrapper component for two arrays, one for unselected nodes and one for selected nodes
  */
 export class CanvasNodeStore extends NodeStore {
     constructor(initializer: Partial<CanvasNodeStore>) {
-        /**
-         An object of type Partial<StaticTextNodeStore> means that the object passed into it will have the properties of a StaticTextNodeStore (title and text, below), as well as the properties of a NodeStore, which it inherits from. 
-         Additionally, the Partial<> bit makes all these properties optional, so the object passed in may not have all these properties.
-         */
         super();
         Object.assign(this, initializer);
-
-        /*
-        the line above is equivalent to:
-
-        this.x = initializer.x;
-        this.y = initializer.y;
-        this.title = initializer.title;
-        this.text = initializer.text;
-        */
     }
 
     // Pointer to the exterior canvas outside of a canvas
@@ -46,4 +36,21 @@ export class CanvasNodeStore extends NodeStore {
 
     @observable
     public canvasType: CanvasType | null = null;
+
+    @observable
+    public mode: CanvasMode | CanvasMode = CanvasMode.defaultMode;
+
+    @action
+    public switchModes = () => {
+        console.log(this.mode)
+        if (this.mode === CanvasMode.defaultMode) {
+            this.mode = CanvasMode.darkMode
+        }
+        else if (this.mode === CanvasMode.darkMode) {
+            this.mode = CanvasMode.lightMode
+        }
+        else {
+            this.mode = CanvasMode.defaultMode;
+        }
+    }
 }
