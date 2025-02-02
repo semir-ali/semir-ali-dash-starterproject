@@ -7,6 +7,7 @@ export enum StoreType {
     Video,
     Image,
     Website,
+    Audio,
     FreeformCanvas,
     Grid
 }

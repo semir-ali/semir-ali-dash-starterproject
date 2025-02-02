@@ -9,6 +9,8 @@ import { VideoNodeView } from "./views/nodes";
 import { ImageNodeStore } from "./stores/ImageNodeStore";
 import { ImageNodeView } from "./views/nodes/ImageNodeView";
 import { GridCanvas } from "./views/nodes/GridCanvas/GridCanvas";
+import { AudioNodeView } from "./views/nodes/AudioNode";
+import { AudioNodeStore } from "./stores/AudioNodeStore";
 import * as React from 'react';
 
 /**
@@ -50,6 +52,11 @@ export class Utils {
                 case StoreType.Website:
                     return (<div key={Utils.GenerateGuid()} className={className}>
                         <WebsiteNodeView key={nodeStore.Id} store={nodeStore as WebsiteNodeStore} collection={collection}
+                    canvastype={canvasType}/>
+                    </div>);
+                case StoreType.Audio:
+                    return (<div key={Utils.GenerateGuid()} className={className}>
+                        <AudioNodeView key={nodeStore.Id} store={nodeStore as AudioNodeStore} nodeCollection={collection}
                     canvastype={canvasType}/>
                     </div>);
                 case StoreType.FreeformCanvas:
