@@ -9,7 +9,7 @@ import { Utils } from "../../../Utils";
 
 interface ImageNodeProps {
     store: ImageNodeStore;
-    collection: NodeCollectionStore;
+    nodeCollection: NodeCollectionStore;
     canvastype: CanvasType
 }
 
@@ -19,16 +19,17 @@ export class ImageNodeView extends React.Component<ImageNodeProps> {
 
     render() {
         let store = this.props.store;
-        let collection = this.props.collection;
+        let nodeCollection = this.props.nodeCollection;
         let canvasType = this.props.canvastype;
         let nodeContent = <div>
-                                <img src={store.url}/>
+                            <h3>{store.title}</h3>
+                            <img src={store.url}/>
                             </div>
         if (canvasType === CanvasType.FreeformCanvas) {
-            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection));
+            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, nodeCollection));
         }
         return (
-            Utils.renderNode("node videoNode", canvasType, store, collection, 
+            Utils.renderNode("node imageNode", canvasType, store, nodeCollection, 
                 nodeContent)
         )
         }

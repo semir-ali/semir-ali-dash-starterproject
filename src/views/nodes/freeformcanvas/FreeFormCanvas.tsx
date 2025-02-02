@@ -9,7 +9,7 @@ import { CanvasType } from "../../../stores";
 
 interface FreeFormProps {
     store: CanvasNodeStore // Treats the canvas as an individual node
-    collection: NodeCollectionStore // Treats the canvas as a backdrop with multiple nodes
+    nodeCollection: NodeCollectionStore // Treats the canvas as a backdrop with multiple nodes
     previousCollection: NodeCollectionStore
     canvasType: CanvasType;
 }
@@ -20,21 +20,22 @@ export class FreeFormCanvas extends React.Component<FreeFormProps> {
     
 render() {
     let store = this.props.store;
-    let collection = this.props.collection;
+    let nodeCollection = this.props.nodeCollection;
     let previousCollection = this.props.previousCollection;
     let canvasType = this.props.canvasType;
-    let nodeContent = <div className="freeformcanvas" style={{ transform: collection.transform}}>
+    let nodeContent = <div className="freeformcanvas" style={{ transform: nodeCollection.transform}}>
+                        <h3>{store.title}</h3>
                         {previousCollection.linkedNodes !== null ? 
-                        collection.linkedNodes.map(linkedNodes => (
+                        nodeCollection.linkedNodes.map(linkedNodes => (
                         <NodeLink 
                             key={Utils.GenerateGuid()} 
                             node1={linkedNodes[Constants.FIRST_NODE_INDEX]}
                             node2={linkedNodes[Constants.SECOND_NODE_INDEX]} 
-                            nodeCollection={collection}
+                            nodeCollection={nodeCollection}
                         />
                         )) : null
                     }
-                    {Utils.renderCanvas(collection, "none", store.canvasType as CanvasType)}
+                    {Utils.renderCanvas(nodeCollection, "none", store.canvasType as CanvasType)}
                     </div>
     if (store.isRenderedNode === false) {
         // When Freeform is not rendered (acts as a node), adds it to the canvas and makes it moveable on the the freeform canvas
@@ -49,21 +50,21 @@ render() {
     // Else, makes the freeform canvas, with nodes that are able to be moved through dragging
     return (
         <div className="freeformcanvas-container" style={{ filter: `brightness(${store.mode})`}} onPointerDown={e => 
-        {if (collection.selectedNodes.length === 0) {
-            Utils.alterNode(e, collection, "Move")
+        {if (nodeCollection.selectedNodes.length === 0) {
+            Utils.alterNode(e, nodeCollection, "Move")
         }}}>
-            <div className="freeformcanvas" style={{ transform: collection.transform}}>
+            <div className="freeformcanvas" style={{ transform: nodeCollection.transform}}>
                 <div>
-                    {collection.linkedNodes !== null ? 
-                        collection.linkedNodes.map(linkedNodes => (
+                    {nodeCollection.linkedNodes !== null ? 
+                        nodeCollection.linkedNodes.map(linkedNodes => (
                             <NodeLink 
                                 key={Utils.GenerateGuid()} 
                                 node1={linkedNodes[Constants.FIRST_NODE_INDEX]}
                                 node2={linkedNodes[Constants.SECOND_NODE_INDEX]} 
-                                nodeCollection={collection}
+                                nodeCollection={nodeCollection}
                             />
                         )) : null}
-                    {Utils.renderCanvas(collection, Constants.NO_CLASS_NAME, store.canvasType as CanvasType)}
+                    {Utils.renderCanvas(nodeCollection, Constants.NO_CLASS_NAME, store.canvasType as CanvasType)}
                 </div>
             </div>
         </div>

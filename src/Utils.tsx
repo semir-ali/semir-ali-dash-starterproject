@@ -31,56 +31,56 @@ export class Utils {
     /**
      * Renders a canvas with a corresponding collection of nodes
      */
-    public static renderCanvas = (collection: NodeCollectionStore, className: string, canvasType: CanvasType) => {
+    public static renderCanvas = (nodeCollection: NodeCollectionStore, className: string, canvasType: CanvasType) => {
         return (
-            collection.unselectedNodes.map(nodeStore => {
+            nodeCollection.unselectedNodes.map(nodeStore => {
             switch (nodeStore.type) {
                 case StoreType.Text:
                     return (<div key={Utils.GenerateGuid()} className={className}>
-                    <TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} nodeCollection={collection} canvastype={canvasType}/>
+                    <TextNodeView key={nodeStore.Id} store={nodeStore as StaticTextNodeStore} nodeCollection={nodeCollection} canvastype={canvasType}/>
                     </div>);
                 case StoreType.Video:
                     return (<div key={Utils.GenerateGuid()} className={className}>
-                        <VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={collection}
+                        <VideoNodeView key={nodeStore.Id} store={nodeStore as VideoNodeStore} collection={nodeCollection}
                     canvastype={canvasType}/>
                     </div>);
                 case StoreType.Image:
                     return (<div key={Utils.GenerateGuid()} className={className}>
-                        <ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} collection={collection}
+                        <ImageNodeView key={nodeStore.Id} store={nodeStore as ImageNodeStore} nodeCollection={nodeCollection}
                     canvastype={canvasType}/>
                     </div>);
                 case StoreType.Website:
                     return (<div key={Utils.GenerateGuid()} className={className}>
-                        <WebsiteNodeView key={nodeStore.Id} store={nodeStore as WebsiteNodeStore} collection={collection}
+                        <WebsiteNodeView key={nodeStore.Id} store={nodeStore as WebsiteNodeStore} nodeCollection={nodeCollection}
                     canvastype={canvasType}/>
                     </div>);
                 case StoreType.Audio:
                     return (<div key={Utils.GenerateGuid()} className={className}>
-                        <AudioNodeView key={nodeStore.Id} store={nodeStore as AudioNodeStore} nodeCollection={collection}
+                        <AudioNodeView key={nodeStore.Id} store={nodeStore as AudioNodeStore} nodeCollection={nodeCollection}
                     canvastype={canvasType}/>
                     </div>);
                 case StoreType.FreeformCanvas:
                     const canvasNode = nodeStore as CanvasNodeStore;
                     if (canvasNode.prevNode !== undefined) {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.prevNode.childrenNodes} canvasType={canvasType}/>
+                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} nodeCollection={canvasNode.childrenNodes} previousCollection={canvasNode.prevNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                     }
                     else {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={canvasNode.childrenNodes} previousCollection={canvasNode.childrenNodes} canvasType={canvasType}/>
+                            <FreeFormCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} nodeCollection={canvasNode.childrenNodes} previousCollection={canvasNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                     }
                 case StoreType.Grid:
                     const gridCanvasNode = nodeStore as CanvasNodeStore;
                     if (gridCanvasNode.prevNode !== undefined) {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.prevNode.childrenNodes} canvasType={canvasType}/>
+                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} nodeCollection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.prevNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                     }
                     else {
                         return (<div key={Utils.GenerateGuid()} className={className}>
-                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} collection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.childrenNodes} canvasType={canvasType}/>
+                            <GridCanvas key={nodeStore.Id} store={nodeStore as CanvasNodeStore} nodeCollection={gridCanvasNode.childrenNodes} previousCollection={gridCanvasNode.childrenNodes} canvasType={canvasType}/>
                             </div>);
                         }
                 default:

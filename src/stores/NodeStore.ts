@@ -44,6 +44,9 @@ export class NodeStore {
     public type: StoreType | null = null;
 
     @observable
+    public title: string = Constants.DEFAULT_TITLE;
+
+    @observable
     public linkedNode: boolean = false;
 
     @observable
@@ -68,10 +71,10 @@ export class NodeStore {
     public centerY: number = this.y + (this.height/2);
 
     @observable
-    public xOffset: number = 0;
+    public xOffset: number = Constants.NODE_STARTING_X_OFFSET;
 
     @observable
-    public yOffset: number = 50;
+    public yOffset: number = Constants.NODE_STARTING_Y_OFFSET;
 
     @observable
     public resizableNodeVisibility: ResizableNodesVisibility | ResizableNodesVisibility = ResizableNodesVisibility.Hidden;

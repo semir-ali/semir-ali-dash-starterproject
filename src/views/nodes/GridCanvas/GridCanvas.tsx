@@ -9,7 +9,7 @@ import "./GridCanvas.scss";
 
 interface GridProps {
     store: CanvasNodeStore // Treats the canvas as an individual node
-    collection: NodeCollectionStore // Treats the canvas as a backdrop with multiple nodes
+    nodeCollection: NodeCollectionStore // Treats the canvas as a backdrop with multiple nodes
     previousCollection: NodeCollectionStore;
     canvasType: CanvasType;
 }
@@ -19,19 +19,20 @@ interface GridProps {
 export class GridCanvas extends React.Component<GridProps> {
     render() {
         let store = this.props.store;
-        let collection = this.props.collection;
+        let nodeCollection = this.props.nodeCollection;
         let previousCollection = this.props.previousCollection;
         let canvasType = this.props.canvasType;
         var nodeContent = <div className="grid">
+                    <h3>{store.title}</h3>
                     {previousCollection.linkedNodes !== null ? 
-                        collection.linkedNodes.map(linkedNodes => (
+                        nodeCollection.linkedNodes.map(linkedNodes => (
                             <NodeLink 
                             key={Utils.GenerateGuid()} 
                             node1={linkedNodes[Constants.FIRST_NODE_INDEX]}
                             node2={linkedNodes[Constants.SECOND_NODE_INDEX]} 
-                            nodeCollection={collection}/>
+                            nodeCollection={nodeCollection}/>
                         )) : null}
-                        {Utils.renderCanvas(collection, "box", store.canvasType as CanvasType)}
+                        {Utils.renderCanvas(nodeCollection, "box", store.canvasType as CanvasType)}
                         </div>
         if (store.isRenderedNode === false) {
             if (canvasType === CanvasType.FreeformCanvas) {
@@ -42,8 +43,8 @@ export class GridCanvas extends React.Component<GridProps> {
                 );
         }
         return (
-            <div className="container" style={{ filter: `grayscale(${store.mode})` }}>
-            {Utils.renderCanvas(collection, "box", store.canvasType as CanvasType)}
+            <div className="container" style={{filter: `brightness(${store.mode})`}}>
+            {Utils.renderCanvas(nodeCollection, "box", store.canvasType as CanvasType)}
             </div>)
         }
     }

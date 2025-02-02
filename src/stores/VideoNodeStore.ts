@@ -8,11 +8,7 @@ export class VideoNodeStore extends NodeStore {
         super();
         Object.assign(this, initializer);
     }
-    // Unique parts of the 
-    @observable
-    public title: string | undefined;
 
     @observable
     public url: string | undefined;
-
 }

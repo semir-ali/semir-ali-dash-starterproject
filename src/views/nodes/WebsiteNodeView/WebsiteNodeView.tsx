@@ -9,7 +9,7 @@ import { Utils } from "../../../Utils";
 
 interface WebsiteNodeProps {
     store: WebsiteNodeStore;
-    collection: NodeCollectionStore;
+    nodeCollection: NodeCollectionStore;
     canvastype: CanvasType;
 }
 
@@ -18,18 +18,19 @@ interface WebsiteNodeProps {
 export class WebsiteNodeView extends React.Component<WebsiteNodeProps> {
     render() {
         let store = this.props.store;
-        let collection = this.props.collection;
+        let nodeCollection = this.props.nodeCollection;
         let canvasType = this.props.canvastype;
         let nodeContent = <div>
+                            <h3>{store.title}</h3>
                             <iframe src={store.url} />
                             <p>Not loading? Find your website at <a href={store.url}>{store.url}</a>
                             </p>
                         </div>
         if (canvasType === CanvasType.FreeformCanvas) {
-            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, collection))
+            document.addEventListener("pointermove", (e) => Utils.moveNewNode(e, store, nodeCollection))
             }
         return (
-            Utils.renderNode("node websiteNode", canvasType, store, collection,
+            Utils.renderNode("node websiteNode", canvasType, store, nodeCollection,
                 nodeContent)
             )
         }

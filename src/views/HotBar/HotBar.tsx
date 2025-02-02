@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import * as React from 'react';
 import { CanvasCollectionStore, CanvasNodeStore, NodeCollectionStore, StaticTextNodeStore, StoreType, VideoNodeStore } from "../../stores";
+import { AudioNodeStore } from "../../stores/AudioNodeStore";
 import { ImageNodeStore } from "../../stores/ImageNodeStore";
 import { WebsiteNodeStore } from "../../stores/WebsiteNodeStore";
 import { NodeStore } from "../../stores";
@@ -26,12 +27,13 @@ export class HotBar extends React.Component<HotBarProps> {
         return (
             <nav className="nav">
                 <ul>
-                    <li><button onClick={() => this.addNode(nodeCollection, new StaticTextNodeStore({type: StoreType.Text, title: prompt('Title? ', "untitled") as string, text: prompt('Text? ', Constants.DEFAULT_TEXT) as string}))}>Add Text Node</button></li>
-                    <li><button onClick={() => this.addNode(nodeCollection, new WebsiteNodeStore({type: StoreType.Website, url: prompt('Which website do you want displayed? ', Constants.DEFAULT_WEBSITE) as string}))}>Add Website Node</button></li>
-                    <li><button onClick={() => this.addNode(nodeCollection, new VideoNodeStore({type: StoreType.Video, url: prompt('What is the url of your video? ', Constants.DEFAULT_VIDEO) as string}))}>
+                    <li><button onClick={() => this.addNode(nodeCollection, new StaticTextNodeStore({type: StoreType.Text, title: prompt('Title? ', Constants.DEFAULT_TITLE) as string, text: prompt('Text? ', Constants.DEFAULT_TEXT) as string}))}>Add Text Node</button></li>
+                    <li><button onClick={() => this.addNode(nodeCollection, new WebsiteNodeStore({type: StoreType.Website, url: prompt('Which website do you want displayed? ', Constants.DEFAULT_WEBSITE) as string, title: prompt('Title? ', Constants.DEFAULT_TITLE) as string} ))}>Add Website Node</button></li>
+                    <li><button onClick={() => this.addNode(nodeCollection, new VideoNodeStore({type: StoreType.Video, url: prompt('What is the url of your video? ', Constants.DEFAULT_VIDEO) as string, title: prompt('Title? ', Constants.DEFAULT_TITLE) as string}))}>
                         Add Video Node</button></li>
+                    <li><button onClick={() => this.addNode(nodeCollection, new AudioNodeStore({type: StoreType.Audio, mp3: prompt('What is the url of your audio? ', Constants.DEFAULT_AUDIO) as string, title: prompt('Title? ', Constants.DEFAULT_TITLE) as string}))}>Add Audio Node</button></li>
                     <li><button onClick={() => this.addNode(nodeCollection, 
-                        new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', Constants.DEFAULT_IMAGE) as string}))}>Add Image Node</button></li>
+                        new ImageNodeStore({type: StoreType.Image, url: prompt('What is the url of your image? ', Constants.DEFAULT_IMAGE) as string, title: prompt('Title? ', Constants.DEFAULT_TITLE) as string}))}>Add Image Node</button></li>
                     <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, CanvasType.FreeformCanvas, StoreType.FreeformCanvas)}>Add Freeform Canvas Node</button></li>
                     <li><button onClick={() => this.addCanvasNode(canvasCollection, currentCanvas, nodeCollection, CanvasType.Grid, StoreType.Grid)}>Add Grid Canvas Node</button></li>
                     <li><button onClick={() => this.removeNode(nodeCollection)}>Remove Node</button></li>
@@ -63,18 +65,19 @@ export class HotBar extends React.Component<HotBarProps> {
 
     // Links two nodes together
     linkNodes = (nodeCollection: NodeCollectionStore): void => {
-        if (nodeCollection.numOfSelectedNodes === 2) {
+        if (nodeCollection.numOfSelectedNodes === Constants.NUMBER_OF_LINKED_NODES) {
             nodeCollection.addLinkedNodes()
             new NodeLink({node1: nodeCollection.selectedNodes[Constants.FIRST_NODE_INDEX], node2: nodeCollection.selectedNodes[Constants.SECOND_NODE_INDEX], nodeCollection: nodeCollection})
         }
     }
     // Specifically adds a canvas to the current canvas
     addCanvasNode = (canvasCollection: CanvasCollectionStore, currentCanvas: CanvasNodeStore, nodeCollection: NodeCollectionStore, canvasType: CanvasType, storeType: StoreType): void => {
-        var canvasStore = new CanvasNodeStore({type: storeType, canvasType: canvasType, prevNode: currentCanvas, childrenNodes: new NodeCollectionStore()});
+        var canvasStore = new CanvasNodeStore({type: storeType, canvasType: canvasType, prevNode: currentCanvas, childrenNodes: new NodeCollectionStore(), title: prompt('Title? ', Constants.DEFAULT_TITLE) as string});
         this.addNode(nodeCollection, canvasStore);
         canvasCollection.addCanvas(canvasStore)
     }
 
+    // Allows the user to enter a selected canvas
     enterCanvas = (canvas: CanvasCollectionStore, currentCanvas: CanvasNodeStore): void => {
     let selectedCanvas: CanvasNodeStore | null = null;
 

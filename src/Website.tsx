@@ -9,10 +9,11 @@ import { GridCanvas } from './views/nodes/GridCanvas/GridCanvas';
 
 const mainCanvasCollection = new CanvasCollectionStore();
 
+// Acts as a sort of "Game" component for the whole website, allows user input for creating a canvas
 @observer
 export class Website extends React.Component {
     render() {
-        // Allows 
+        // Allows the user to choose the displayed canvas
         if (mainCanvasCollection.canvasCollection.length === 0) {
             var promptedCanvas = prompt("What canvas do you want displayed? \n A: FreeformCanvas \n B: GridCanvas", "A");
             if (promptedCanvas === "A") {
@@ -22,12 +23,12 @@ export class Website extends React.Component {
                 mainCanvasCollection.addCanvas(new CanvasNodeStore({isRenderedNode: true, canvasType: CanvasType.Grid}));
             }
         }
-        // Renders the type of canvas
+        // Renders the type of canvas based on prompted canvas
         if (mainCanvasCollection.renderedNode.canvasType === CanvasType.FreeformCanvas) {
             return (
             <div>
                 <HotBar currentCanvas={mainCanvasCollection.renderedNode} canvasCollection={mainCanvasCollection}/>
-                <FreeFormCanvas store={mainCanvasCollection.renderedNode} collection={mainCanvasCollection.renderedNode.childrenNodes} 
+                <FreeFormCanvas store={mainCanvasCollection.renderedNode} nodeCollection={mainCanvasCollection.renderedNode.childrenNodes} 
                 previousCollection={(mainCanvasCollection.renderedNode.prevNode !== undefined? mainCanvasCollection.renderedNode.prevNode : mainCanvasCollection.renderedNode.childrenNodes) as NodeCollectionStore} canvasType={CanvasType.FreeformCanvas}/>
             </div>
             )
@@ -36,7 +37,7 @@ export class Website extends React.Component {
             return (
             <div>
                 <HotBar currentCanvas={mainCanvasCollection.renderedNode} canvasCollection={mainCanvasCollection}/>
-                <GridCanvas store={mainCanvasCollection.renderedNode} collection={mainCanvasCollection.renderedNode.childrenNodes}
+                <GridCanvas store={mainCanvasCollection.renderedNode} nodeCollection={mainCanvasCollection.renderedNode.childrenNodes}
                 previousCollection={(mainCanvasCollection.renderedNode.prevNode !== undefined? mainCanvasCollection.renderedNode.prevNode : mainCanvasCollection.renderedNode.childrenNodes) as NodeCollectionStore} canvasType={CanvasType.Grid} />
             </div>
             )

@@ -85,4 +85,32 @@ export class NodeCollectionStore extends NodeStore {
         this.selectedNodes[Constants.FIRST_NODE_INDEX].linkedNode = false;
         this.selectedNodes[Constants.SECOND_NODE_INDEX].linkedNode = false;
     }
+
+    // Finds a node (that the user can prompt) and makes it the center of the window
+    @action
+    public findAndCenterNode(title: string) {
+        let selectedNode: NodeStore | null = null;
+        
+        if (!this.unselectedNodes || this.unselectedNodes.length === 0) return;
+
+        for (let num = 0; num < this.unselectedNodes.length; num++) {
+            if (this.unselectedNodes[num] && this.unselectedNodes[num].title === title) {
+                selectedNode = this.unselectedNodes[num];
+                break;
+            }
+        }
+
+        if (!selectedNode) {
+            alert("Node not found!");
+            return;
+        }
+
+        const xDistanceFromMouse = -(selectedNode.centerX - (window.outerWidth / 2) + this.xOffset);
+        const yDistanceFromMouse = -(selectedNode.centerY - (window.outerHeight / 2) + this.yOffset);
+
+        this.x += xDistanceFromMouse;
+        this.xOffset += xDistanceFromMouse;
+        this.y += yDistanceFromMouse;
+        this.yOffset += yDistanceFromMouse;
+        }
 }

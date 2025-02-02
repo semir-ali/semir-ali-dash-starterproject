@@ -20,8 +20,9 @@ export class AudioNodeView extends React.Component<AudioNodeProps> {
         let nodeCollection = this.props.nodeCollection;
         let canvasType = this.props.canvastype;
         let nodeContent = <div>
+                            <h3>{store.title}</h3>
                             <audio controls>
-                                <source src="horse.ogg" type="audio/ogg"/>
+                                <source src={store.mp3} type="audio/mpeg"/>
                             </audio>
                         </div>
         if (canvasType === CanvasType.FreeformCanvas) {
